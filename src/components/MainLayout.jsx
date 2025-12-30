@@ -1,13 +1,24 @@
 import React from 'react';
-import Navbar from './navbar'; // Importing from the same folder
+import Navbar from './Navbar';
 
-export default function MainLayout({ children }) {
+// Receive props from App.jsx
+export default function MainLayout({ children, currentPage, onNavigate }) {
+    
+    // Mock user for now (you can add login logic later)
+    const user = null; 
+    const handleLogin = () => alert("Login Modal Coming Soon");
+
     return (
-        // Moved the global background/font styles here
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-10 transition-colors duration-300">
-            <Navbar />
+        <div className="min-h-screen bg-slate-50 font-sans">
+            {/* Pass the props down to the Navbar */}
+            <Navbar 
+                currentPage={currentPage} 
+                onNavigate={onNavigate} 
+                user={user}
+                onLogin={handleLogin}
+            />
             
-            {/* The content (PhotoEngine) will be rendered here */}
+            {/* Render the specific page (Landing or Engine) */}
             <main>
                 {children}
             </main>
