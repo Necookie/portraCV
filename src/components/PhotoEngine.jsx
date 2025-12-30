@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Camera, Menu, X, Upload, Printer, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Camera, Menu, X, Upload, Printer, Image as ImageIcon } from 'lucide-react';
 
 export default function PhotoEngine() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,32 +20,26 @@ export default function PhotoEngine() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans pb-10">
+        <div className="min-h-screen bg-background text-slate-900 font-sans pb-10 transition-colors duration-300">
             
             {/* --- FIXED PRINT STYLES --- */}
             <style>{`
                 @media print {
-                    /* 1. RESET PAGE MARGINS */
                     @page {
                         size: A4 portrait;
-                        margin: 0; /* Tells browser to use 0 margin */
+                        margin: 0;
                     }
-                    
                     body {
                         margin: 0;
                         padding: 0;
                         background: white;
                     }
-
-                    /* 2. HIDE UI ELEMENTS */
                     body * {
                         visibility: hidden;
                     }
                     #print-canvas, #print-canvas * {
                         visibility: visible;
                     }
-
-                    /* 3. CENTER THE CONTENT "CANVAS" */
                     #print-canvas {
                         position: absolute;
                         top: 0;
@@ -53,58 +47,55 @@ export default function PhotoEngine() {
                         width: 100%;
                         display: flex;
                         flex-direction: column;
-                        align-items: center; /* Center horizontally */
-                        padding-top: 0.5in; /* Small top padding for safety */
+                        align-items: center;
+                        padding-top: 0.5in;
                     }
-
-                    /* 4. DEFINE THE STRICT 8-INCH CONTAINER */
-                    /* A4 is 8.27in wide. Our content is 8.0in wide. 
-                       Centering it prevents cutoff. */
                     .print-row-container {
                         width: 8in; 
                         display: flex;
                         flex-wrap: wrap;
                         justify-content: flex-start;
-                        margin-bottom: 0; /* Dikit-dikit vertically */
+                        margin-bottom: 0;
                     }
-
-                    /* 5. EXACT IMAGE SIZES (NO GAPS) */
                     .photo-2x2 {
                         width: 2in;
                         height: 2in;
-                        box-sizing: border-box; /* Ensures border doesn't add to size */
-                        border: 0.5px solid #ddd; /* Faint guide line for cutting */
+                        box-sizing: border-box;
+                        border: 0.5px solid #ddd;
                     }
-
                     .photo-1x1 {
                         width: 1in;
                         height: 1in;
                         box-sizing: border-box;
                         border: 0.5px solid #ddd;
                     }
-
                     img {
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
-                        display: block; /* Removes tiny bottom gap in some browsers */
+                        display: block;
                     }
                 }
             `}</style>
 
 
             {/* --- NAVBAR --- */}
-            <nav className="sticky top-5 z-50 mx-auto w-[95%] max-w-7xl bg-zinc-900/90 backdrop-blur-md border border-zinc-800 rounded-2xl shadow-xl mb-10 print:hidden">
+            <nav className="sticky top-5 z-50 mx-auto w-[95%] max-w-7xl bg-surface/90 backdrop-blur-md border border-slate-200 rounded-2xl shadow-sm mb-10 print:hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center gap-2">
-                            <div className="bg-indigo-500/20 p-2 rounded-lg text-indigo-400">
+                            {/* Brand Logo Area */}
+                            <div className="bg-indigo-50 p-2 rounded-lg text-primary">
                                 <Camera size={24} />
                             </div>
-                            <span className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-white bg-clip-text text-transparent">PortraCV</span>
+                            <span className="text-xl font-bold text-slate-900 tracking-tight">PortraCV</span>
                         </div>
+                        
+                        {/* Desktop Nav */}
                         <div className="hidden md:flex items-center space-x-8">
-                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md">Login</button>
+                            <button className="bg-primary hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                Login
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -116,63 +107,79 @@ export default function PhotoEngine() {
                 
                 {/* LEFT: Controls */}
                 <div className="lg:col-span-5 flex flex-col gap-6 print:hidden">
+                    
+                    {/* Upload Zone */}
                     <div className="relative group">
-                        <div className={`aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 ${selectedImage ? 'border-indigo-500/50 bg-zinc-900' : 'border-zinc-700 hover:border-indigo-500 hover:bg-zinc-900/50'}`}>
+                        <div className={`
+                            aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer
+                            ${selectedImage 
+                                ? 'border-primary/50 bg-indigo-50/50' 
+                                : 'border-slate-300 bg-surface hover:border-primary hover:bg-indigo-50/30'
+                            }
+                        `}>
                             {selectedImage ? (
-                                <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-lg" />
+                                <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-sm" />
                             ) : (
                                 <>
-                                    <Upload className="text-indigo-400 mb-4" size={32} />
-                                    <h3 className="text-lg font-semibold text-white">Upload Selfie</h3>
+                                    <div className="bg-indigo-50 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                                        <Upload className="text-primary" size={32} />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-slate-900">Upload Selfie</h3>
+                                    <p className="text-slate-500 text-sm mt-1">Drag & drop or click to browse</p>
                                 </>
                             )}
                             <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         </div>
                     </div>
-                    <button onClick={triggerPrint} className="w-full bg-white hover:bg-zinc-200 text-black h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg active:scale-95">
-                        <Printer size={20} /> Print / Save PDF
+
+                    {/* Print Button */}
+                    <button 
+                        onClick={triggerPrint} 
+                        className="w-full bg-surface border border-slate-200 hover:border-primary/50 hover:bg-indigo-50/50 text-slate-700 hover:text-primary h-12 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md active:scale-95"
+                    >
+                        <Printer size={20} /> 
+                        <span>Print / Save PDF</span>
                     </button>
                 </div>
 
 
                 {/* RIGHT: Preview & Print Area */}
                 <div className="lg:col-span-7">
-                    <div className="bg-white text-zinc-900 rounded-xl shadow-2xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:rounded-none">
+                    <div className="bg-paper border border-slate-200 rounded-xl shadow-xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:border-none print:rounded-none">
                         
                         {/* Header (Screen only) */}
-                        <div className="border-b border-zinc-200 p-4 bg-zinc-50 flex justify-between items-center print:hidden">
-                            <h2 className="font-bold text-lg">A4 Print Preview</h2>
-                            <span className="text-xs font-mono bg-zinc-200 px-2 py-1 rounded text-zinc-600">210 x 297 mm</span>
+                        <div className="border-b border-slate-200 p-4 bg-slate-50/80 flex justify-between items-center print:hidden">
+                            <h2 className="font-bold text-slate-800 text-lg">A4 Print Preview</h2>
+                            <span className="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded text-slate-500 shadow-sm">210 x 297 mm</span>
                         </div>
 
                         {/* --- ACTUAL PRINTABLE CANVAS --- */}
                         <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1">
                             
-                            {/* Row 1: 2x2 Photos (Dikit-Dikit) */}
-                            {/* Screen styling uses Tailwind grid, Print styling uses strict 8in flex container */}
+                            {/* Row 1: 2x2 Photos */}
                             <div className="print-row-container grid grid-cols-4 gap-4 print:block print:gap-0">
                                 {[1, 2, 3, 4].map((item) => (
-                                    <div key={`2x2-${item}`} className="photo-2x2 aspect-square bg-zinc-100 relative print:aspect-auto">
+                                    <div key={`2x2-${item}`} className="photo-2x2 aspect-square bg-slate-100 border border-slate-200 relative print:aspect-auto print:border-none">
                                         {selectedImage ? (
-                                            <img src={selectedImage} />
+                                            <img src={selectedImage} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-zinc-300 border border-zinc-200">
-                                                <ImageIcon size={20} />
+                                            <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                <ImageIcon size={24} />
                                             </div>
                                         )}
                                     </div>
                                 ))}
                             </div>
 
-                            {/* Row 2: 1x1 Photos (Dikit-Dikit) */}
+                            {/* Row 2: 1x1 Photos */}
                             <div className="print-row-container grid grid-cols-4 gap-4 print:block print:gap-0 mt-8 print:mt-0">
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                                    <div key={`1x1-${item}`} className="photo-1x1 aspect-square bg-zinc-100 relative print:aspect-auto">
+                                    <div key={`1x1-${item}`} className="photo-1x1 aspect-square bg-slate-100 border border-slate-200 relative print:aspect-auto print:border-none">
                                         {selectedImage ? (
-                                            <img src={selectedImage} />
+                                            <img src={selectedImage} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-zinc-300 border border-zinc-200">
-                                                <ImageIcon size={16} />
+                                            <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                <ImageIcon size={20} />
                                             </div>
                                         )}
                                     </div>
