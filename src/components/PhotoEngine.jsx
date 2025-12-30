@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Camera, Menu, X, Upload, Printer, Image as ImageIcon } from 'lucide-react';
+import { Upload, Printer, Image as ImageIcon } from 'lucide-react';
 
 export default function PhotoEngine() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
 
     const handleImageUpload = (e) => {
@@ -20,9 +19,9 @@ export default function PhotoEngine() {
     };
 
     return (
-        <div className="min-h-screen bg-background text-slate-900 font-sans pb-10 transition-colors duration-300">
-            
+        <>
             {/* --- FIXED PRINT STYLES --- */}
+            {/* Kept this here because it is specific to printing photos */}
             <style>{`
                 @media print {
                     @page {
@@ -78,32 +77,8 @@ export default function PhotoEngine() {
                 }
             `}</style>
 
-
-            {/* --- NAVBAR --- */}
-            <nav className="sticky top-5 z-50 mx-auto w-[95%] max-w-7xl bg-surface/90 backdrop-blur-md border border-slate-200 rounded-2xl shadow-sm mb-10 print:hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center gap-2">
-                            {/* Brand Logo Area */}
-                            <div className="bg-indigo-50 p-2 rounded-lg text-primary">
-                                <Camera size={24} />
-                            </div>
-                            <span className="text-xl font-bold text-slate-900 tracking-tight">PortraCV</span>
-                        </div>
-                        
-                        {/* Desktop Nav */}
-                        <div className="hidden md:flex items-center space-x-8">
-                            <button className="bg-primary hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                                Login
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-
             {/* --- MAIN CONTENT --- */}
-            <main className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* LEFT: Controls */}
                 <div className="lg:col-span-5 flex flex-col gap-6 print:hidden">
@@ -113,8 +88,8 @@ export default function PhotoEngine() {
                         <div className={`
                             aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer
                             ${selectedImage 
-                                ? 'border-primary/50 bg-indigo-50/50' 
-                                : 'border-slate-300 bg-surface hover:border-primary hover:bg-indigo-50/30'
+                                ? 'border-indigo-500/50 bg-indigo-50/50' 
+                                : 'border-slate-300 bg-white hover:border-indigo-500 hover:bg-indigo-50/30'
                             }
                         `}>
                             {selectedImage ? (
@@ -122,7 +97,7 @@ export default function PhotoEngine() {
                             ) : (
                                 <>
                                     <div className="bg-indigo-50 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
-                                        <Upload className="text-primary" size={32} />
+                                        <Upload className="text-indigo-600" size={32} />
                                     </div>
                                     <h3 className="text-lg font-semibold text-slate-900">Upload Selfie</h3>
                                     <p className="text-slate-500 text-sm mt-1">Drag & drop or click to browse</p>
@@ -135,17 +110,16 @@ export default function PhotoEngine() {
                     {/* Print Button */}
                     <button 
                         onClick={triggerPrint} 
-                        className="w-full bg-surface border border-slate-200 hover:border-primary/50 hover:bg-indigo-50/50 text-slate-700 hover:text-primary h-12 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md active:scale-95"
+                        className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md active:scale-95"
                     >
                         <Printer size={20} /> 
                         <span>Print / Save PDF</span>
                     </button>
                 </div>
 
-
                 {/* RIGHT: Preview & Print Area */}
                 <div className="lg:col-span-7">
-                    <div className="bg-paper border border-slate-200 rounded-xl shadow-xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:border-none print:rounded-none">
+                    <div className="bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:border-none print:rounded-none">
                         
                         {/* Header (Screen only) */}
                         <div className="border-b border-slate-200 p-4 bg-slate-50/80 flex justify-between items-center print:hidden">
@@ -166,7 +140,7 @@ export default function PhotoEngine() {
                                             <div className="w-full h-full flex items-center justify-center text-slate-300">
                                                 <ImageIcon size={24} />
                                             </div>
-                                        )}
+                                        )} 
                                     </div>
                                 ))}
                             </div>
@@ -189,8 +163,7 @@ export default function PhotoEngine() {
                         </div>
                     </div>
                 </div>
-
-            </main>
-        </div>
+            </div>
+        </>
     );
 }

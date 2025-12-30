@@ -1,11 +1,11 @@
-import React from 'react';
-import PhotoEngine from './components/PhotoEngine'; // Imports your new component
+import MainLayout from './components/MainLayout';
+import PhotoEngine from './components/PhotoEngine';
 
 function App() {
   return (
-    <div>
-      <PhotoEngine />
-    </div>
+    <MainLayout>
+       <PhotoEngine />
+    </MainLayout>
   );
 }
 
