@@ -146,7 +146,7 @@ export default function PhotoEngine() {
                                     Coming Soon
                                 </span>
                             </button>
-                        </div>
+                        </div>  
 
                         <button onClick={triggerPrint} className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95">
                             <Printer size={20} /> Print / Save PDF
