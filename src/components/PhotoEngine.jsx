@@ -5,52 +5,47 @@ import { Camera, Upload, Printer, Image as ImageIcon, Sparkles, Loader2, Shirt, 
 
 export default function PhotoEngine() {
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null); // To store the raw file
     const [isProcessing, setIsProcessing] = useState(false);
+    const [bgColor, setBgColor] = useState("#ffffff"); // Default background color
     
     // --- SAAS STATE ---
     const [userCredits, setUserCredits] = useState(50); 
-    
-    // --- API CONFIGURATION ---
-    const PIXIAN_KEY = "YOUR_PIXIAN_KEY"; 
     
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
+            setSelectedFile(file); // Store the raw file object
         }
     };
 
-    // --- FEATURE 1: BACKGROUND REMOVER (Cost: 1 Credit) ---
+    // --- FEATURE 1: BACKGROUND REMOVER (Connected to Python Backend) ---
     const handleRemoveBackground = async () => {
-        if (!selectedImage) return;
-        if (userCredits < 1) { alert("Insufficient Credits! Please top up."); return; }
-
+        if (!selectedFile) return; // Make sure you store the raw file object!
         setIsProcessing(true);
-        try {
-            // 1. Fetch current image
-            const response = await fetch(selectedImage);
-            const blob = await response.blob();
-            const formData = new FormData();
-            formData.append("image", blob, "photo.png");
 
-            // 2. Call Pixian (Example)
-            const apiResponse = await fetch("https://api.pixian.ai/api/v2/remove-background", {
+        try {
+            const formData = new FormData();
+            formData.append("file", selectedFile); // The file from <input type="file">
+            formData.append("color", bgColor);     // e.g., "#ffffff" or "transparent"
+
+            // CALL YOUR PYTHON BACKEND
+            const response = await fetch("http://localhost:8000/remove-bg", {
                 method: "POST",
-                headers: { "Authorization": `Basic ${btoa(PIXIAN_KEY + ":")}` },
-                body: formData
+                body: formData,
             });
 
-            if (!apiResponse.ok) throw new Error("Pixian Failed");
-
-            // 3. Update Image & Deduct Credit
-            const resultBlob = await apiResponse.blob();
-            setSelectedImage(URL.createObjectURL(resultBlob));
-            setUserCredits(prev => prev - 1); 
-
+            if (response.ok) {
+                const blob = await response.blob();
+                const newImageUrl = URL.createObjectURL(blob);
+                setSelectedImage(newImageUrl); // Update the preview
+            } else {
+                console.error("Server Error");
+            }
         } catch (error) {
-            console.error(error);
-            alert("Background removal failed. Check API Key.");
+            console.error("Connection Failed", error);
         } finally {
             setIsProcessing(false);
         }
@@ -119,18 +114,20 @@ export default function PhotoEngine() {
                         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                             <h3 className="font-bold text-slate-700 text-sm uppercase tracking-wider">AI Studio</h3>
                             
-                            {/* 1. Remove Background (Coming Soon) */}
+                            {/* 1. Remove Background */}
                             <button 
-                                disabled={true}
-                                className="w-full h-11 bg-slate-50 border border-slate-200 text-slate-400 rounded-xl font-medium flex items-center justify-between px-4 cursor-not-allowed"
+                                onClick={handleRemoveBackground}
+                                disabled={!selectedImage || isProcessing}
+                                className="w-full h-11 bg-indigo-600 text-white rounded-xl font-medium flex items-center justify-center px-4 transition-all duration-200 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
                             >
-                                <span className="flex items-center gap-2">
-                                    <Sparkles size={18}/> 
-                                    Remove Background
-                                </span>
-                                <span className="text-[10px] font-bold bg-amber-50 text-amber-600 px-2 py-1 rounded border border-amber-200 uppercase tracking-wide">
-                                    Coming Soon
-                                </span>
+                                {isProcessing ? (
+                                    <Loader2 size={18} className="animate-spin" />
+                                ) : (
+                                    <span className="flex items-center gap-2">
+                                        <Sparkles size={18}/> 
+                                        Remove Background
+                                    </span>
+                                )}
                             </button>
 
                             {/* 2. Formal Attire (Coming Soon) */}
