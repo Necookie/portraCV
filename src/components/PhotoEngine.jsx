@@ -75,15 +75,30 @@ export default function PhotoEngine() {
             
             {/* PRINT STYLES */}
             <style>{`
-                @media print {
+                    @media print {
                     @page { size: A4 portrait; margin: 0; }
                     body { margin: 0; padding: 0; background: white; }
                     body * { visibility: hidden; }
                     #print-canvas, #print-canvas * { visibility: visible; }
                     #print-canvas { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.5in; }
                     .print-row-container { width: 8in; display: flex; flex-wrap: wrap; justify-content: flex-start; margin-bottom: 0; }
-                    .photo-2x2 { width: 2in; height: 2in; box-sizing: border-box; border: 0.5px solid #ddd; background-color: white !important; }
-                    .photo-1x1 { width: 1in; height: 1in; box-sizing: border-box; border: 0.5px solid #ddd; background-color: white !important; }
+                    
+                    /* UPDATED: Thicker and darker borders for cutting guides */
+                    .photo-2x2 { 
+                        width: 2in; 
+                        height: 2in; 
+                        box-sizing: border-box; 
+                        border: 1px solid #94a3b8; /* Darker Slate-400 */
+                        background-color: white !important; 
+                    }
+                    .photo-1x1 { 
+                        width: 1in; 
+                        height: 1in; 
+                        box-sizing: border-box; 
+                        border: 1px solid #94a3b8; /* Darker Slate-400 */
+                        background-color: white !important; 
+                    }
+                    
                     img { width: 100%; height: 100%; object-fit: cover; display: block; }
                 }
             `}</style>
