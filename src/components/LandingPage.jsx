@@ -1,7 +1,16 @@
 import React from 'react';
-import { Camera, Sparkles, Printer, ArrowRight, FileText, Phone, Mail, Github, User } from 'lucide-react';
+import { Camera, Sparkles, Printer, ArrowRight, Phone, Mail, Github, User, Globe } from 'lucide-react';
 
-export default function LandingPage() {
+export default function LandingPage({ onNavigate }) {
+  
+  // Helper to scroll to footer
+  const scrollToContact = () => {
+    const footer = document.getElementById('contact-footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen font-sans bg-background overflow-hidden">
       
@@ -17,21 +26,33 @@ export default function LandingPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                 </span>
-                <span className="text-sm font-medium text-amber-700">Resume Builder & AI Tools Coming Soon</span>
+                <span className="text-sm font-medium text-amber-700">AI Formal Attire Coming Soon</span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6 leading-[1.1]">
                 Simplify Your <br className="hidden lg:block"/>
                 <span className="text-primary">Printing Operations.</span>
               </h1>
               <p className="text-lg text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                Stop manually dragging images in MS Office. Automate your 2x2 and 1x1 layouts, remove backgrounds, and prepare documents for print in seconds.
+                Stop manually dragging images in MS Office. Automate your 2x2 and 1x1 layouts, remove backgrounds instantly, and prepare documents for print in seconds.
               </p>
+              
+              {/* BUTTONS */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button className="bg-primary hover:bg-indigo-700 text-white h-12 px-8 rounded-full font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group">
+                
+                {/* Primary Action */}
+                <button 
+                  onClick={() => onNavigate('engine')}
+                  className="bg-primary hover:bg-indigo-700 text-white h-12 px-8 rounded-full font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
+                >
                   Start Layout Engine
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform"/>
                 </button>
-                <button className="bg-surface text-slate-700 border border-slate-200 hover:border-primary/50 hover:bg-indigo-50/50 h-12 px-8 rounded-full font-semibold transition-all">
+
+                {/* Secondary Action - Contact Developer */}
+                <button 
+                  onClick={scrollToContact}
+                  className="bg-surface text-slate-700 border border-slate-200 hover:border-primary/50 hover:bg-indigo-50/50 h-12 px-8 rounded-full font-semibold transition-all"
+                >
                   Contact Developer
                 </button>
               </div>
@@ -39,12 +60,9 @@ export default function LandingPage() {
 
             {/* Visual Mockup (Right) */}
             <div className="col-span-6 relative">
-              {/* Decorative blob behind */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-indigo-100/40 to-purple-100/40 rounded-full blur-3xl -z-10"></div>
               
-              {/* The "Paper" Mockup */}
               <div className="bg-paper rounded-xl shadow-2xl border border-slate-100 p-6 relative transform lg:rotate-3 hover:rotate-0 transition-all duration-500 max-w-md mx-auto">
-                {/* Header mockup */}
                 <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                    <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-red-400"></div>
@@ -54,9 +72,7 @@ export default function LandingPage() {
                    <span className="text-xs font-mono text-slate-400">A4 Layout Preview</span>
                 </div>
                 
-                {/* Grid mockup representing the output */}
                 <div className="space-y-6 opacity-90">
-                   {/* 2x2 rows */}
                    <div className="grid grid-cols-4 gap-3">
                       {[1,2,3,4].map(i => (
                         <div key={i} className="aspect-square rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center">
@@ -64,7 +80,6 @@ export default function LandingPage() {
                         </div>
                       ))}
                    </div>
-                   {/* 1x1 rows */}
                    <div className="grid grid-cols-5 gap-3">
                       {[1,2,3,4,5].map(i => (
                         <div key={i} className="aspect-square rounded-sm bg-slate-50 border border-slate-100"></div>
@@ -72,7 +87,6 @@ export default function LandingPage() {
                    </div>
                 </div>
                 
-                {/* Floating Badge */}
                  <div className="absolute -bottom-5 -right-5 bg-surface border border-slate-100 shadow-lg p-3 rounded-xl flex items-center gap-3 animate-bounce-slow">
                     <div className="bg-success/10 p-2 rounded-full text-success">
                        <Printer size={20} />
@@ -110,43 +124,38 @@ export default function LandingPage() {
               </p>
             </div>
             
-            {/* Feature 2: AI Features (Coming Soon) */}
-            <div className="flex flex-col items-center text-center relative opacity-75">
-              <div className="absolute -top-3 right-10 bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full border border-amber-200">
-                COMING SOON
-              </div>
-              <div className="bg-slate-50 h-16 w-16 rounded-2xl flex items-center justify-center text-slate-400 mb-6 shadow-sm border border-slate-100">
+            {/* Feature 2: Background Remover (Live) */}
+            <div className="flex flex-col items-center text-center relative">
+              <div className="bg-indigo-50 h-16 w-16 rounded-2xl flex items-center justify-center text-primary mb-6 shadow-sm border border-indigo-100">
                 <Sparkles size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-700 mb-3">AI Background Tools</h3>
-              <p className="text-slate-500 leading-relaxed">
-                Advanced background removal and automatic formal attire generation to speed up your editing workflow.
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Smart Background Removal</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Instantly remove messy backgrounds and replace them with white or custom colors. Perfect for ID photos.
               </p>
             </div>
 
-             {/* Feature 3: Resume Builder (Coming Soon) */}
+             {/* Feature 3: AI Formal Attire (Coming Soon) */}
              <div className="flex flex-col items-center text-center relative opacity-75">
               <div className="absolute -top-3 right-10 bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full border border-amber-200">
                 COMING SOON
               </div>
               <div className="bg-slate-50 h-16 w-16 rounded-2xl flex items-center justify-center text-slate-400 mb-6 shadow-sm border border-slate-100">
-                <FileText size={32} />
+                <User size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-700 mb-3">Resume Builder</h3>
+              <h3 className="text-xl font-bold text-slate-700 mb-3">AI Formal Attire</h3>
               <p className="text-slate-500 leading-relaxed">
-                Offer value-added services to your customers by generating professional CVs and layouts instantly.
+                Automatically generate professional suits and formal wear on your subjects using generative AI.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- DEVELOPER / CONTACT FOOTER --- */}
-      <footer className="py-16 bg-slate-50 border-t border-slate-200">
+      {/* --- FOOTER --- */}
+      <footer id="contact-footer" className="py-16 bg-slate-50 border-t border-slate-200">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              
-              {/* Brand Info */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="bg-indigo-600 p-1.5 rounded-lg text-white">
@@ -166,7 +175,19 @@ export default function LandingPage() {
 
               {/* Developer Contact Card */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-                <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Developer Contact</h4>
+                <div className="flex justify-between items-center mb-6">
+                    <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Developer Contact</h4>
+                    {/* NEW MINIMIZED BUTTON */}
+                    <a 
+                      href="https://necookie.dev" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-primary/30 rounded-lg text-xs font-medium text-slate-600 hover:text-primary transition-all group"
+                    >
+                      <Globe size={12} className="text-slate-400 group-hover:text-primary"/>
+                      Visit Portfolio
+                    </a>
+                </div>
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">

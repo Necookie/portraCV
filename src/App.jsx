@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import MainLayout from './components/MainLayout';
 import PhotoEngine from './components/PhotoEngine';
 import LandingPage from './components/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useAuth } from './context/AuthContext';
 import AuthModal from './components/AuthModal';
+import UpdatePassword from './components/UpdatePassword';
 
-function App() {
+function AppContent() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user } = useAuth();
+  const { user, isRecoveryMode } = useAuth(); 
 
+  // This function handles the logic: "If going to Engine but not logged in -> Show Login Modal"
   const handleNavigate = (page) => {
     if (page === 'engine' && !user) {
       setShowAuthModal(true);
@@ -19,6 +20,11 @@ function App() {
       setCurrentPage(page);
     }
   };
+
+  // 1. Priority: If in recovery mode (clicked email link), SHOW UPDATE PASSWORD
+  if (isRecoveryMode) {
+      return <UpdatePassword />;
+  }
 
   return (
     <>
@@ -28,7 +34,8 @@ function App() {
         onOpenAuth={() => setShowAuthModal(true)}
       >
         {currentPage === 'landing' ? (
-          <LandingPage />
+          // PASS THE NAVIGATE FUNCTION HERE
+          <LandingPage onNavigate={handleNavigate} />
         ) : (
           <ProtectedRoute>
             <PhotoEngine />
@@ -46,7 +53,7 @@ function App() {
 
 const AppWrapper = () => (
   <AuthProvider>
-    <App />
+    <AppContent />
   </AuthProvider>
 );
 
