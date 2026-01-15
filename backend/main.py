@@ -10,16 +10,17 @@ import uvicorn
 
 app = FastAPI()
 
-# 1. ALLOW REACT TO TALK TO PYTHON (CORS)
+# 1. CORS: Allow React to talk to Python
+# In production, for better security, you might replace "*" with your specific frontend domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 2. LOAD MODEL (Happens once when server starts)
+# 2. LOAD MODEL
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Loading Model on {device}...")
 model = AutoModelForImageSegmentation.from_pretrained('ZhengPeng7/BiRefNet', trust_remote_code=True)
@@ -32,7 +33,7 @@ def process_image(image_bytes, bg_color_hex):
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     original_size = image.size
     
-    # Preprocess (Resize to 1024x1024 for AI)
+    # Preprocess
     transform_image = transforms.Compose([
         transforms.Resize((1024, 1024)),
         transforms.ToTensor(),
@@ -54,7 +55,6 @@ def process_image(image_bytes, bg_color_hex):
         result = image.convert("RGBA")
         result.putalpha(mask_pil)
     else:
-        # Create solid color background
         bg_color = tuple(int(bg_color_hex.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
         background = Image.new("RGB", original_size, bg_color)
         result = Image.composite(image, background, mask_pil)
@@ -71,4 +71,5 @@ async def remove_bg(file: UploadFile = File(...), color: str = Form(...)):
     return Response(content=result_bytes, media_type="image/png")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # CRITICAL CHANGE: Hugging Face Spaces expects the app to run on port 7860
+    uvicorn.run(app, host="0.0.0.0", port=7860)

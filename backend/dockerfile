@@ -1,0 +1,23 @@
+# 1. Base Image
+FROM python:3.9-slim
+
+# 2. Setup User (Hugging Face Security Requirement)
+# We create a user named 'user' with ID 1000
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH
+
+# 3. Setup Working Directory
+WORKDIR $HOME/app
+
+# 4. Copy Requirements first (for caching)
+COPY --chown=user requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# 5. Copy the rest of the application
+COPY --chown=user . .
+
+# 6. Run the Application
+# Note: Hugging Face will look for port 7860
+CMD ["uvicorn", "Main:app", "--host", "0.0.0.0", "--port", "7860"]
