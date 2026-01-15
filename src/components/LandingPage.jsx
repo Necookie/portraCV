@@ -105,7 +105,7 @@ export default function LandingPage() {
                 <Printer size={32} />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-3">Auto-Layout Engine</h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-slate-600 leading-relaxed"> 
                 Automatically arrange 2x2 and 1x1 photos on an A4 canvas. No more resizing images in Word or PowerPoint.
               </p>
             </div>
