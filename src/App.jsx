@@ -1,25 +1,53 @@
 import React, { useState } from 'react';
+import { AuthProvider } from './context/AuthContext';
 import MainLayout from './components/MainLayout';
 import PhotoEngine from './components/PhotoEngine';
 import LandingPage from './components/LandingPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './context/AuthContext';
+import AuthModal from './components/AuthModal';
 
 function App() {
-  // 1. STATE: Default to 'landing' page
   const [currentPage, setCurrentPage] = useState('landing');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user } = useAuth();
+
+  const handleNavigate = (page) => {
+    if (page === 'engine' && !user) {
+      setShowAuthModal(true);
+    } else {
+      setCurrentPage(page);
+    }
+  };
 
   return (
-    // 2. Pass the state and the switcher function to MainLayout
-    <MainLayout currentPage={currentPage} onNavigate={setCurrentPage}>
-       
-       {/* 3. CONDITIONAL RENDERING: Swap components based on state */}
-       {currentPage === 'landing' ? (
+    <>
+      <MainLayout
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
+        onOpenAuth={() => setShowAuthModal(true)}
+      >
+        {currentPage === 'landing' ? (
           <LandingPage />
-       ) : (
-          <PhotoEngine />
-       )}
-       
-    </MainLayout>
+        ) : (
+          <ProtectedRoute>
+            <PhotoEngine />
+          </ProtectedRoute>
+        )}
+      </MainLayout>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
+    </>
   );
 }
 
-export default App;
+const AppWrapper = () => (
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
+
+export default AppWrapper;
