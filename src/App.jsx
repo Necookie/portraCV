@@ -6,6 +6,8 @@ import LandingPage from './components/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthModal from './components/AuthModal';
 import UpdatePassword from './components/UpdatePassword';
+// 1. Import the new ChatWidget
+import ChatWidget from './components/ChatWidget';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -21,7 +23,7 @@ function AppContent() {
     }
   };
 
-  // 1. Priority: If in recovery mode (clicked email link), SHOW UPDATE PASSWORD
+  // Priority: If in recovery mode (clicked email link), SHOW UPDATE PASSWORD
   if (isRecoveryMode) {
       return <UpdatePassword />;
   }
@@ -34,7 +36,6 @@ function AppContent() {
         onOpenAuth={() => setShowAuthModal(true)}
       >
         {currentPage === 'landing' ? (
-          // PASS THE NAVIGATE FUNCTION HERE
           <LandingPage onNavigate={handleNavigate} />
         ) : (
           <ProtectedRoute>
@@ -47,6 +48,9 @@ function AppContent() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
       />
+
+      {/* 2. Add the ChatWidget here so it floats above everything */}
+      <ChatWidget />
     </>
   );
 }
