@@ -1,21 +1,18 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Camera, Upload, Printer, Image as ImageIcon, Sparkles, Loader2, Shirt, Coins, Github, User, Mail, Phone } from 'lucide-react';
+import { Camera, Upload, Printer, Image as ImageIcon, Sparkles, Loader2, Shirt, Github, User, Mail, Phone, Palette } from 'lucide-react';
 
 // --- CONFIGURATION ---
-// TODO: Replace this URL with your actual Hugging Face Space URL after deployment.
-// Example: "https://yourusername-space-name.hf.space"
 const BACKEND_URL = "https://necookie-portracv-backend.hf.space"; 
 
 export default function PhotoEngine() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [bgColor, setBgColor] = useState("#ffffff");
-    
+    const [bgColor, setBgColor] = useState("#ffffff"); // State for the background color
     const [userCredits, setUserCredits] = useState(50); 
-    
+
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -32,9 +29,8 @@ export default function PhotoEngine() {
         try {
             const formData = new FormData();
             formData.append("file", selectedFile);
-            formData.append("color", bgColor);
+            formData.append("color", bgColor); // Sending the chosen color to backend
 
-            // UPDATED: Uses the deployed backend URL
             const response = await fetch(`${BACKEND_URL}/remove-bg`, {
                 method: "POST",
                 body: formData,
@@ -56,28 +52,12 @@ export default function PhotoEngine() {
         }
     };
 
-    const handleFormalAttire = async () => {
-        if (!selectedImage) return;
-        if (userCredits < 5) { alert("Formal Attire costs 5 credits. Please top up."); return; }
-        
-        setIsProcessing(true);
-        try {
-            await new Promise(r => setTimeout(r, 2000));
-            alert("This feature requires a backend connection to Replicate/OpenAI.");
-            setUserCredits(prev => prev - 5); 
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
     const triggerPrint = () => { window.print(); };
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
             <style>{`
-                    @media print {
+                @media print {
                     @page { size: A4 portrait; margin: 0; }
                     body { margin: 0; padding: 0; background: white; }
                     body * { visibility: hidden; }
@@ -105,6 +85,7 @@ export default function PhotoEngine() {
 
             <div className="flex-grow pb-20"> 
                 <main className="max-w-7xl mx-auto px-4 md:px-6 pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
                     {/* LEFT: Controls */}
                     <div className="lg:col-span-5 flex flex-col gap-4 print:hidden">
                         <div className="relative group">
@@ -122,20 +103,42 @@ export default function PhotoEngine() {
                         </div>
 
                         {/* SAAS CONTROLS */}
-                        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                            <h3 className="font-bold text-slate-700 text-sm uppercase tracking-wider">AI Studio</h3>
-                            
+                        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+                            <div className="flex justify-between items-center">
+                                <h3 className="font-bold text-slate-700 text-sm uppercase tracking-wider">AI Studio</h3>
+                                <div className="flex items-center gap-1 text-indigo-600 font-bold text-xs bg-indigo-50 px-2 py-1 rounded-full">
+                                    <Palette size={12}/> Background
+                                </div>
+                            </div>
+
+                            {/* COLOR PICKER SECTION */}
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Select Background Color</label>
+                                <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                    <input 
+                                        type="color" 
+                                        value={bgColor}
+                                        onChange={(e) => setBgColor(e.target.value)}
+                                        className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white shadow-sm overflow-hidden"
+                                    />
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-mono font-bold text-slate-700 uppercase">{bgColor}</span>
+                                        <p className="text-[10px] text-slate-500">Pick the ID background color</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button 
                                 onClick={handleRemoveBackground}
                                 disabled={!selectedImage || isProcessing}
-                                className="w-full h-11 bg-indigo-600 text-white rounded-xl font-medium flex items-center justify-center px-4 transition-all duration-200 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
+                                className="w-full h-12 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center px-4 transition-all duration-200 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-md shadow-indigo-100"
                             >
                                 {isProcessing ? (
                                     <Loader2 size={18} className="animate-spin" />
                                 ) : (
                                     <span className="flex items-center gap-2">
                                         <Sparkles size={18}/> 
-                                        Remove Background
+                                        Apply & Process
                                     </span>
                                 )}
                             </button>
@@ -148,13 +151,13 @@ export default function PhotoEngine() {
                                     <Shirt size={18}/> 
                                     Generate Formal Suit
                                 </span>
-                                <span className="text-[10px] font-bold bg-amber-50 text-amber-600 px-2 py-1 rounded border border-amber-200 uppercase tracking-wide">
-                                    Coming Soon
+                                <span className="text-[10px] font-bold bg-white text-slate-400 px-2 py-1 rounded border border-slate-200 uppercase tracking-wide">
+                                    Locked
                                 </span>
                             </button>
                         </div>  
 
-                        <button onClick={triggerPrint} className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95">
+                        <button onClick={triggerPrint} className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
                             <Printer size={20} /> Print / Save PDF
                         </button>
                     </div>
@@ -187,6 +190,7 @@ export default function PhotoEngine() {
                 </main>
             </div>
 
+            {/* Footer remains same */}
             <footer className="py-16 bg-slate-50 border-t border-slate-200 print:hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -211,20 +215,20 @@ export default function PhotoEngine() {
                             <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Developer Contact</h4>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <User size={20} className="text-primary mt-1" />
+                                    <User size={20} className="text-indigo-600 mt-1" />
                                     <div>
                                         <p className="font-semibold text-slate-900">Dheyn Michael Orlanda</p>
                                         <p className="text-sm text-slate-500">Lead Developer (Necookie.dev)</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <Mail size={20} className="text-primary" />
-                                    <a href="mailto:Dheyn.main@gmail.com" className="text-slate-600 hover:text-primary transition-colors">
+                                    <Mail size={20} className="text-indigo-600" />
+                                    <a href="mailto:Dheyn.main@gmail.com" className="text-slate-600 hover:text-indigo-600 transition-colors">
                                         Dheyn.main@gmail.com
                                     </a>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <Phone size={20} className="text-primary" />
+                                    <Phone size={20} className="text-indigo-600" />
                                     <span className="text-slate-600">+63 995 492 2742</span>
                                 </div>
                             </div>
