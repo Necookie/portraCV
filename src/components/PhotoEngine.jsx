@@ -1,24 +1,102 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Camera, Upload, Printer, Image as ImageIcon, Sparkles, Loader2, Shirt, Github, User, Mail, Phone, Palette } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import Cropper from 'react-easy-crop';
+import { Camera, Upload, Printer, Image as ImageIcon, Sparkles, Loader2, Shirt, Github, User, Mail, Phone, Palette, Crop as CropIcon, X, Check, ZoomIn } from 'lucide-react';
 
 // --- CONFIGURATION ---
-const BACKEND_URL = "https://necookie-portracv-backend.hf.space"; 
+const BACKEND_URL = "https://necookie-portracv-backend.hf.space";
+
+// --- UTILITY: Create Image Helper ---
+const createImage = (url) =>
+    new Promise((resolve, reject) => {
+        const image = new Image();
+        image.addEventListener('load', () => resolve(image));
+        image.addEventListener('error', (error) => reject(error));
+        image.setAttribute('crossOrigin', 'anonymous');
+        image.src = url;
+    });
+
+// --- UTILITY: Canvas Cropping Logic ---
+async function getCroppedImg(imageSrc, pixelCrop) {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+        return null;
+    }
+
+    // Set canvas size to match the cropped area
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    // Draw the cropped image onto the canvas
+    ctx.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+    );
+
+    // Return as a Blob (to act like a file) and a URL (for preview)
+    return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+            const fileUrl = URL.createObjectURL(blob);
+            resolve({ blob, fileUrl });
+        }, 'image/jpeg');
+    });
+}
 
 export default function PhotoEngine() {
+    // --- STATE ---
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [originalImage, setOriginalImage] = useState(null); // Keep original for re-cropping
     const [isProcessing, setIsProcessing] = useState(false);
-    const [bgColor, setBgColor] = useState("#ffffff"); // State for the background color
-    const [userCredits, setUserCredits] = useState(50); 
+    const [bgColor, setBgColor] = useState("#ffffff");
+    
+    // Crop State
+    const [isCropping, setIsCropping] = useState(false);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
+            setOriginalImage(imageUrl); // Save original for cropping reset
             setSelectedFile(file);
+            setIsCropping(true); // Auto-open cropper on upload
+        }
+    };
+
+    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
+
+    const handleSaveCrop = async () => {
+        try {
+            const { blob, fileUrl } = await getCroppedImg(originalImage, croppedAreaPixels);
+            
+            // Update the preview
+            setSelectedImage(fileUrl);
+            
+            // Create a new File object from the blob so the AI backend accepts it
+            const newFile = new File([blob], "cropped_image.jpg", { type: "image/jpeg" });
+            setSelectedFile(newFile);
+            
+            setIsCropping(false);
+        } catch (e) {
+            console.error(e);
+            alert("Something went wrong cropping the image.");
         }
     };
 
@@ -29,7 +107,7 @@ export default function PhotoEngine() {
         try {
             const formData = new FormData();
             formData.append("file", selectedFile);
-            formData.append("color", bgColor); // Sending the chosen color to backend
+            formData.append("color", bgColor);
 
             const response = await fetch(`${BACKEND_URL}/remove-bg`, {
                 method: "POST",
@@ -40,6 +118,8 @@ export default function PhotoEngine() {
                 const blob = await response.blob();
                 const newImageUrl = URL.createObjectURL(blob);
                 setSelectedImage(newImageUrl);
+                // We don't update selectedFile here to preserve the "source" for further edits if needed
+                // or you could update it if you want the next crop to be on the bg-removed version
             } else {
                 console.error("Server Error");
                 alert("Failed to connect to the AI server. Please check if the backend is waking up.");
@@ -66,32 +146,96 @@ export default function PhotoEngine() {
                     .print-row-container { width: 8in; display: flex; flex-wrap: wrap; justify-content: flex-start; margin-bottom: 0; }
                     
                     .photo-2x2 { 
-                        width: 2in; 
-                        height: 2in; 
-                        box-sizing: border-box; 
-                        border: 1px solid #94a3b8;
+                        width: 2in; height: 2in; box-sizing: border-box; border: 1px solid #94a3b8;
                         background-color: white !important; 
                     }
                     .photo-1x1 { 
-                        width: 1in; 
-                        height: 1in; 
-                        box-sizing: border-box; 
-                        border: 1px solid #94a3b8;
+                        width: 1in; height: 1in; box-sizing: border-box; border: 1px solid #94a3b8;
                         background-color: white !important; 
                     }
                     img { width: 100%; height: 100%; object-fit: cover; display: block; }
                 }
             `}</style>
 
-            <div className="flex-grow pb-20"> 
+            <div className="flex-grow pb-20 relative">
+                
+                {/* --- CROPPER OVERLAY --- */}
+                {isCropping && originalImage && (
+                    <div className="fixed inset-0 z-50 bg-slate-900/90 flex flex-col items-center justify-center p-4 animate-in fade-in duration-200">
+                        <div className="w-full max-w-2xl bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+                            <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                                <h3 className="font-bold text-slate-700">Adjust Photo</h3>
+                                <button onClick={() => setIsCropping(false)} className="text-slate-400 hover:text-red-500">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            
+                            <div className="relative h-[400px] w-full bg-slate-100">
+                                <Cropper
+                                    image={originalImage}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    aspect={1} // 1:1 Aspect Ratio (Square) for ID photos
+                                    onCropChange={setCrop}
+                                    onCropComplete={onCropComplete}
+                                    onZoomChange={setZoom}
+                                />
+                            </div>
+
+                            <div className="p-6 space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <ZoomIn size={18} className="text-slate-400" />
+                                    <input
+                                        type="range"
+                                        value={zoom}
+                                        min={1}
+                                        max={3}
+                                        step={0.1}
+                                        aria-labelledby="Zoom"
+                                        onChange={(e) => setZoom(Number(e.target.value))}
+                                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                                    />
+                                </div>
+                                <div className="flex gap-3">
+                                    <button 
+                                        onClick={() => setIsCropping(false)}
+                                        className="flex-1 py-3 text-slate-600 font-semibold hover:bg-slate-50 rounded-xl transition-colors border border-slate-200"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={handleSaveCrop}
+                                        className="flex-1 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 flex items-center justify-center gap-2"
+                                    >
+                                        <Check size={18} /> Apply Crop
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <main className="max-w-7xl mx-auto px-4 md:px-6 pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
                     
                     {/* LEFT: Controls */}
                     <div className="lg:col-span-5 flex flex-col gap-4 print:hidden">
                         <div className="relative group">
-                            <div className={`aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer ${selectedImage ? 'border-indigo-500/50 bg-indigo-50/50' : 'border-slate-300 bg-white hover:border-indigo-500 hover:bg-indigo-50/30'}`}>
+                            <div className={`aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer overflow-hidden relative ${selectedImage ? 'border-indigo-500/50 bg-indigo-50/50' : 'border-slate-300 bg-white hover:border-indigo-500 hover:bg-indigo-50/30'}`}>
                                 {selectedImage ? (
-                                    <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-sm" />
+                                    <>
+                                        <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-sm" />
+                                        {/* Edit Button overlay */}
+                                        <button 
+                                            onClick={() => {
+                                                setZoom(1);
+                                                setIsCropping(true);
+                                            }}
+                                            className="absolute bottom-4 right-4 bg-white text-indigo-600 p-2 rounded-full shadow-lg border border-indigo-100 hover:scale-105 transition-transform"
+                                            title="Edit Crop"
+                                        >
+                                            <CropIcon size={20} />
+                                        </button>
+                                    </>
                                 ) : (
                                     <>
                                         <Upload className="text-indigo-600 mb-2" size={32} />
@@ -172,14 +316,14 @@ export default function PhotoEngine() {
                             <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1">
                                 <div className="print-row-container grid grid-cols-4 gap-4 print:block print:gap-0">
                                     {[1, 2, 3, 4].map((item) => (
-                                        <div key={`2x2-${item}`} className="photo-2x2 aspect-square bg-white border border-slate-200 relative print:aspect-auto print:border-none">
+                                        <div key={`2x2-${item}`} className="photo-2x2 aspect-square bg-white border border-slate-200 relative print:aspect-auto print:border-none overflow-hidden">
                                             {selectedImage ? <img src={selectedImage} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon size={24} /></div>}
                                         </div>
                                     ))}
                                 </div>
                                 <div className="print-row-container grid grid-cols-4 gap-4 print:block print:gap-0 mt-8 print:mt-0">
                                     {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                                        <div key={`1x1-${item}`} className="photo-1x1 aspect-square bg-white border border-slate-200 relative print:aspect-auto print:border-none">
+                                        <div key={`1x1-${item}`} className="photo-1x1 aspect-square bg-white border border-slate-200 relative print:aspect-auto print:border-none overflow-hidden">
                                             {selectedImage ? <img src={selectedImage} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon size={20} /></div>}
                                         </div>
                                     ))}
