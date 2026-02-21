@@ -45,6 +45,9 @@ export default function PhotoEngine() {
     // Derived States
     const currentPackage = PACKAGES.find(p => p.id === activePackageId) || PACKAGES[0];
 
+    // --- MULTI-PRINT STAGING STATES ---
+    const [stagedJobs, setStagedJobs] = useState([]);
+
     // --- EVENT HANDLERS ---
 
     /**
@@ -118,6 +121,39 @@ export default function PhotoEngine() {
     /** Triggers the native browser print dialogue configured via `@media print` CSS block */
     const triggerPrint = () => { window.print(); };
 
+    /**
+     * Staging Multi-Print Features
+     * Takes the current active configuration from the editor and pushes it to the locked A4 Canvas Array.
+     */
+    const handleStageJob = () => {
+        if (!selectedImage) return;
+        const newJob = {
+            id: Date.now().toString(),
+            image: selectedImage,
+            package: currentPackage,
+            bgColor,
+            borderColor,
+            borderWidth
+        };
+        setStagedJobs(prev => [...prev, newJob]);
+        handleResetEditor(); // Clear for next person
+    };
+
+    /** Removes a specific job from the A4 Canvas */
+    const handleRemoveStagedJob = (jobId) => {
+        setStagedJobs(prev => prev.filter(job => job.id !== jobId));
+    };
+
+    /** Completely wipes the current editor clean so a new person can step up to the camera */
+    const handleResetEditor = () => {
+        setSelectedImage(null);
+        setSelectedFile(null);
+        setOriginalImage(null);
+        setElapsedTime(0);
+        // We do *not* wipe the colors/package properties so the next upload inherits the photographer's preferred settings!
+    };
+
+
     // --- RENDER BLOCK ---
     return (
         <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col">
@@ -130,10 +166,10 @@ export default function PhotoEngine() {
                     body *, body *::before, body *::after { visibility: hidden; animation: none !important; transform: none !important; transition: none !important; }
                     /* Only the target canvas grid is allowed to paint onto the paper */
                     #print-canvas, #print-canvas * { visibility: visible; }
-                    #print-canvas { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.25in; }
+                    #print-canvas { position: absolute; top: 0; left: 0; right: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.25in; margin: 0 auto; }
                     
                     /* Dynamic Grid Containers - FORCE ZERO GAP BY DEFAULT */
-                    .print-grid { width: 8in; display: grid; gap: 0 !important; margin-bottom: 0; justify-content: center; }
+                    .print-grid { width: 8in !important; max-width: 8in !important; display: grid; gap: 0 !important; margin-bottom: 0; justify-content: center; margin-left: auto; margin-right: auto; }
                     .print-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
                     .print-grid-cols-8 { grid-template-columns: repeat(8, 1fr); }
                     .print-grid-cols-5 { grid-template-columns: repeat(5, 35mm); } /* Passport fix */
@@ -202,10 +238,11 @@ export default function PhotoEngine() {
                             borderWidth={borderWidth} setBorderWidth={setBorderWidth}
                             selectedImage={selectedImage} isProcessing={isProcessing}
                             handleRemoveBackground={handleRemoveBackground} elapsedTime={elapsedTime}
+                            handleStageJob={handleStageJob} handleResetEditor={handleResetEditor}
                         />
 
                         {/* Bottom: Print Access */}
-                        <button onClick={triggerPrint} className="w-full bg-white border border-stone-200 hover:border-rose-500/50 hover:bg-rose-50/50 text-stone-700 hover:text-rose-600 h-12 rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
+                        <button onClick={triggerPrint} disabled={stagedJobs.length === 0 && !selectedImage} className="w-full bg-stone-900 border border-stone-800 hover:bg-stone-800 text-white disabled:bg-stone-300 disabled:border-stone-300 disabled:text-stone-500 h-12 rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] active:scale-95 transition-all">
                             <Printer size={20} /> Print / Save PDF
                         </button>
                     </div>
@@ -217,6 +254,8 @@ export default function PhotoEngine() {
                             selectedImage={selectedImage}
                             borderColor={borderColor}
                             borderWidth={borderWidth}
+                            stagedJobs={stagedJobs}
+                            onRemoveJob={handleRemoveStagedJob}
                         />
                     </div>
 
