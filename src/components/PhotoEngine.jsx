@@ -4,14 +4,14 @@ import React, { useState, useCallback } from 'react';
 import { Upload, Printer, Crop as CropIcon } from 'lucide-react';
 
 // --- UTILITIES & CONSTANTS ---
-import { PACKAGES } from '../../constants/packages';
-import { getCroppedImg, removeBackgroundAPI } from '../../utils/imageProcessor';
+import { PACKAGES } from '../constants/packages';
+import { getCroppedImg, removeBackgroundAPI } from '../utils/imageProcessor';
 
 // --- SUBCOMPONENTS ---
 import CropperModal from './PhotoEngine/CropperModal';
 import AIStudioControls from './PhotoEngine/AIStudioControls';
 import PrintPreviewGrid from './PhotoEngine/PrintPreviewGrid';
-import Footer from '../Footer';
+import Footer from './Footer';
 
 /**
  * Main PhotoEngine Orchestrator Component
