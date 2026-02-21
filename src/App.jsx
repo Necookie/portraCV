@@ -12,9 +12,13 @@ import ChatWidget from './components/ChatWidget';
 const BACKEND_URL = "https://necookie-portracv-backend.hf.space";
 
 function AppContent() {
+  // --- LOCAL STATE ---
   const [currentPage, setCurrentPage] = useState('landing');
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user, isRecoveryMode } = useAuth(); 
+
+  // --- CONTEXT ---
+  // Pull authenticated user state and recovery edge-cases from global auth
+  const { user, isRecoveryMode } = useAuth();
 
   // Keep-alive mechanism for Hugging Face backend
   useEffect(() => {
@@ -35,7 +39,12 @@ function AppContent() {
     return () => clearInterval(interval);
   }, []);
 
-  // This function handles the logic: "If going to Engine but not logged in -> Show Login Modal"
+  // --- NAVIGATION LOGIC ---
+  /**
+   * Central orchestrator for page routing.
+   * Intercepts attempts to access protected routes (PhotoEngine) 
+   * and prompts the Auth Modal if the user is unauthenticated.
+   */
   const handleNavigate = (page) => {
     if (page === 'engine' && !user) {
       setShowAuthModal(true);
@@ -44,13 +53,19 @@ function AppContent() {
     }
   };
 
-  // Priority: If in recovery mode (clicked email link), SHOW UPDATE PASSWORD
+  // --- EDGE CASE RENDERS ---
+  // Priority Route: If returning from an emailed reset-password link, force the Update view
   if (isRecoveryMode) {
-      return <UpdatePassword />;
+    return <UpdatePassword />;
   }
 
+  // --- MAIN RENDER TREE ---
   return (
     <>
+      {/* 
+        MainLayout acts as a static shell (Navbar + structural padding).
+        The dynamic page content is passed inside as children. 
+      */}
       <MainLayout
         currentPage={currentPage}
         onNavigate={handleNavigate}

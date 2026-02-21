@@ -2,18 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Sparkles, User, ArrowUp, AlertCircle } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+/**
+ * ChatWidget Component
+ * A floating, collapsible chat interface utilizing the Google Generative AI (Gemini).
+ * Maintains its own conversation history and streams responses directly.
+ */
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([
-    { 
-      id: 1, 
-      text: "Hello! I'm the PortraCV Assistant. Need help with your photo layouts?", 
-      sender: 'bot' 
+    {
+      id: 1,
+      text: "Hello! I'm the PortraCV Assistant. Need help with your photo layouts?",
+      sender: 'bot'
     }
   ]);
-  
+
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function ChatWidget() {
       const genAI = new GoogleGenerativeAI(geminiKey);
 
       // FORCING SYSTEM INSTRUCTIONS (Best for Production/Vercel)
-      const model = genAI.getGenerativeModel({ 
+      const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
         systemInstruction: systemContext // This is the 'Master Control'
       });
@@ -71,7 +76,7 @@ export default function ChatWidget() {
 
     } catch (error) {
       console.error("AI Error:", error);
-      
+
       // OpenAI Fallback
       try {
         const openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
@@ -104,71 +109,71 @@ export default function ChatWidget() {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
       {isOpen && (
         <div className="mb-4 w-[90vw] sm:w-[360px] h-[520px] max-h-[80vh] bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
-            {/* Header */}
-            <div className="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                        <div className="absolute top-0 left-0 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping opacity-75"></div>
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-slate-800 text-sm">Assistant</h3>
-                        <p className="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Portra CV</p>
-                    </div>
-                </div>
-                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600 p-2 rounded-full transition-colors">
-                    <X size={18} />
-                </button>
+          {/* Header */}
+          <div className="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-10">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                <div className="absolute top-0 left-0 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping opacity-75"></div>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-800 text-sm">Assistant</h3>
+                <p className="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Portra CV</p>
+              </div>
             </div>
+            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-600 p-2 rounded-full transition-colors">
+              <X size={18} />
+            </button>
+          </div>
 
-            {/* Message List */}
-            <div className="flex-1 p-5 overflow-y-auto space-y-6 bg-white scrollbar-thin scrollbar-thumb-slate-100">
-                {messages.map((msg) => (
-                    <div key={msg.id} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`
+          {/* Message List */}
+          <div className="flex-1 p-5 overflow-y-auto space-y-6 bg-white scrollbar-thin scrollbar-thumb-slate-100">
+            {messages.map((msg) => (
+              <div key={msg.id} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                <div className={`
                             max-w-[85%] px-4 py-3 rounded-2xl text-[13px] leading-relaxed shadow-sm
-                            ${msg.sender === 'user' 
-                                ? 'bg-slate-900 text-white rounded-br-none' 
-                                : msg.isError 
-                                    ? 'bg-red-50 text-red-600 border border-red-100 rounded-bl-none'
-                                    : 'bg-slate-50 text-slate-600 border border-slate-100 rounded-bl-none'}
+                            ${msg.sender === 'user'
+                    ? 'bg-slate-900 text-white rounded-br-none'
+                    : msg.isError
+                      ? 'bg-red-50 text-red-600 border border-red-100 rounded-bl-none'
+                      : 'bg-slate-50 text-slate-600 border border-slate-100 rounded-bl-none'}
                         `}>
-                            {msg.isError && <AlertCircle size={14} className="inline mr-2 -mt-0.5" />}
-                            {msg.text}
-                        </div>
-                    </div>
-                ))}
-                {isTyping && (
-                    <div className="flex justify-start">
-                        <div className="bg-slate-50 px-4 py-3 rounded-2xl rounded-bl-none flex gap-1">
-                            <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></span>
-                            <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-75"></span>
-                            <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-150"></span>
-                        </div>
-                    </div>
-                )}
-                <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Form */}
-            <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-50">
-                <div className="relative flex items-center group">
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask me anything..."
-                        className="w-full bg-slate-50 text-slate-800 placeholder:text-slate-400 text-sm rounded-full pl-5 pr-12 py-3.5 focus:outline-none focus:ring-1 focus:ring-slate-200 transition-all border-none"
-                    />
-                    <button
-                        type="submit"
-                        disabled={!input.trim() || isTyping}
-                        className="absolute right-2 p-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 rounded-full text-white transition-all transform active:scale-95 flex items-center justify-center"
-                    >
-                        <ArrowUp size={16} strokeWidth={2.5} />
-                    </button>
+                  {msg.isError && <AlertCircle size={14} className="inline mr-2 -mt-0.5" />}
+                  {msg.text}
                 </div>
-            </form>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-slate-50 px-4 py-3 rounded-2xl rounded-bl-none flex gap-1">
+                  <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></span>
+                  <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-75"></span>
+                  <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-150"></span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Form */}
+          <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-50">
+            <div className="relative flex items-center group">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything..."
+                className="w-full bg-slate-50 text-slate-800 placeholder:text-slate-400 text-sm rounded-full pl-5 pr-12 py-3.5 focus:outline-none focus:ring-1 focus:ring-slate-200 transition-all border-none"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || isTyping}
+                className="absolute right-2 p-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 rounded-full text-white transition-all transform active:scale-95 flex items-center justify-center"
+              >
+                <ArrowUp size={16} strokeWidth={2.5} />
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
