@@ -1,61 +1,59 @@
-# 🚀 PortraCV - Project Documentation
-**Version:** 0.1.0 (Planning Phase)
-**Status:** 🟡 Planning & Design
-**Developer:** Dheyn Michael Orlanda
+# 🚀 PortraCV - AI Photo & Resume Studio
+
+**Version:** 1.0.0 (Beta Release)  
+**Designer & Developer:** Dheyn Michael Orlanda  
+
+PortraCV is a productivity web application designed for job seekers and printing businesses. It streamlines the process of editing, organizing, and printing physical identification photos, saving time, paper, and money for photo booth operators.
 
 ---
 
-## 1. Project Overview
-**PortraCV** is a proposed dual-purpose productivity web application designed for job seekers and printing businesses. It aims to streamline two critical workflows:
-1.  **Resume Building:** Transforming raw user data into professional, ATS-friendly A4 PDF resumes.
-2.  **ID Photo Studio:** Automating the layout of 1x1 and 2x2 ID photos for instant printing.
+## ✨ Key Features
+
+### 🎨 The "Cozy" Aesthetic UI
+Moving away from cold corporate themes, PortraCV features a warm, inviting `Stone/Rose` color palette. The interface is meticulously designed with rounded elements, deep drop shadows, interactive hover states, and smooth CSS keyframe animations (like floating widgets and cascade-in layouts) to provide a premium, dynamic feel.
+
+### 🤖 AI Background Removal (Hugging Face Integration)
+Tired of manually cutting out backgrounds in Photoshop? PortraCV integrates with a Python/FastAPI backend hosted on Hugging Face Spaces to instantly strip backgrounds from uploaded selfies using machine learning.
+- **Client-Side Optimization:** Large 10MB+ camera uploads are instantly downscaled and compressed in the browser before being sent to the AI processing layer, slashing generation times from ~40s down to ~15s without losing physical print quality (maintains 300 DPI).
+- **Customization:** Easily swap the transparent background for any hex color (e.g., standard ID Blue or White).
+
+### 🖨️ Multi-Image Print Canvas
+Designed specifically to save expensive photo paper in commercial printing settings.
+- **Job Staging:** Instead of printing one person at a time, upload a photo, edit it, and "Add to Canvas". 
+- **Mix & Match:** Stage different people, different background colors, and different layouts (e.g., a mix of 2x2s and Passports) onto the exact same A4 sheet.
+- **Precision Margins:** The print engine overrides browser defaults to perfectly center the photo grid, utilizing 100% of the printable A4 area.
 
 ---
 
-## 2. SDLC (Software Development Life Cycle)
-**Methodology:** Agile (Iterative Development)
+## 🛠️ Tech Stack
 
-| Phase | Activity | Status |
-| :--- | :--- | :--- |
-| **Phase 1: Planning** | Define features, choose tech stack, create MVP document. | 🟡 **Current Stage** |
-| **Phase 2: Foundation** | Setup React, Tailwind, and initial project structure. | ⚪ Pending |
-| **Phase 3: Prototype** | Build non-functional UI (Resume Form & ID Grid). | ⚪ Pending |
-| **Phase 4: Integration** | Connect Logic (PDF Generation, Photo Resizing). | ⚪ Pending |
-| **Phase 5: Release** | Deploy MVP for testing. | ⚪ Pending |
-
----
-
-## 3. Planned MVP Features
-The Minimum Viable Product (MVP) will focus on the following core capabilities:
-
-### 🟢 Module A: The Resume Builder
-* **Dynamic Editor:** Inputs for Personal Info, Education, Experience.
-* **Live Preview:** Real-time visual feedback of the A4 document.
-* **PDF Export:** Browser-based PDF generation (client-side).
-
-### 🟢 Module B: The ID Photo Studio
-* **Photo Upload:** Standard image upload functionality.
-* **"Job Hunt Combo" Layout:** Auto-generation of a 2x2 and 1x1 mix on a single A4 sheet.
-* **Grid Layouts:** Standard full-page grids for batch printing.
-
----
-
-## 4. SRS (Software Requirements Specification)
-
-### 4.1 Proposed Tech Stack
-* **Frontend:** React.js + Vite
-* **Styling:** Tailwind CSS (v3)
-* **Printing:** `react-to-print`
+* **Frontend Framework:** React.js + Vite
+* **Styling & Animation:** Tailwind CSS (v3)
 * **Icons:** Lucide-React
-
-### 4.2 Functional Requirements (Draft)
-* **REQ-01:** The app shall allow users to upload an image and render it in multiple predefined sizes (1x1, 2x2) without distortion.
-* **REQ-02:** The app shall provide a split-screen interface (Input vs. Output).
-* **REQ-03:** The print output must strictly adhere to A4 dimensions (210mm x 297mm).
+* **Image Processing:** `react-easy-crop` & HTML5 Canvas API
+* **Backend Integration:** Python, FastAPI, Hugging Face `rembg` (RMBG-1.4 model)
 
 ---
 
-## 5. Next Steps (Immediate To-Do)
-- [ ] Initialize Git repository.
-- [ ] Create Figma wireframe (optional) or paper sketch.
-- [ ] Set up the React + Tailwind environment.
+## 🚀 Getting Started
+
+To run the application locally on your machine:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Necookie/portraCV.git
+   cd portraCV
+   ```
+
+2. **Install frontend dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the Vite development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in Browser:**
+   Navigate to `http://localhost:5173` to view the application.
