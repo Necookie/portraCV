@@ -42,7 +42,7 @@ export default function BackgroundRemover() {
             // Auto-trigger background removal when dropped in the "Landing View"
             if (!previewUrl) {
                 // To avoid stale state closures, we pass the file directly to processing
-                processAILogic(file, true, "");
+                processAILogic(file, true, "transparent");
             }
         }
     };
@@ -56,7 +56,7 @@ export default function BackgroundRemover() {
     // Explicit manual trigger button (for when user changes colors in the workspace)
     const handleRemoveBackground = async () => {
         if (!selectedFile) return;
-        const hexColor = isTransparent ? "" : bgColor.replace('#', '');
+        const hexColor = isTransparent ? "transparent" : bgColor.replace('#', '');
         await processAILogic(selectedFile, isTransparent, hexColor);
     };
 
