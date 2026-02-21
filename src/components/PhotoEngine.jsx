@@ -97,6 +97,7 @@ export default function PhotoEngine() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [bgColor, setBgColor] = useState("#ffffff");
     const [borderColor, setBorderColor] = useState("#cbd5e1"); // Default border color (slate-300)
+    const [borderWidth, setBorderWidth] = useState(1); // Default border width in pixels
     const [activePackageId, setActivePackageId] = useState('mixed');
 
     // Crop State
@@ -198,7 +199,7 @@ export default function PhotoEngine() {
                     .photo-box { 
                         box-sizing: border-box; 
                         /* Clear border for cutting - dynamically set */
-                        border: 1px solid var(--print-border-color, #cbd5e1);
+                        border: var(--print-border-width, 1px) solid var(--print-border-color, #cbd5e1);
                         background-color: white !important; 
                         overflow: hidden;
                         flex-shrink: 0;
@@ -306,8 +307,8 @@ export default function PhotoEngine() {
                                             key={pkg.id}
                                             onClick={() => setActivePackageId(pkg.id)}
                                             className={`p-3 rounded-xl border text-left transition-all ${activePackageId === pkg.id
-                                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-600'
-                                                    : 'border-slate-200 hover:border-indigo-300 text-slate-600'
+                                                ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-600'
+                                                : 'border-slate-200 hover:border-indigo-300 text-slate-600'
                                                 }`}
                                         >
                                             <div className="font-bold text-xs">{pkg.name}</div>
@@ -353,6 +354,30 @@ export default function PhotoEngine() {
                                 </div>
                             </div>
 
+                            {/* BORDER THICKNESS SLIDER */}
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight flex justify-between">
+                                    <span>Border Thickness</span>
+                                    <span className="text-indigo-600 font-mono">{borderWidth.toFixed(1)}px</span>
+                                </label>
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="10"
+                                        step="0.1"
+                                        value={borderWidth}
+                                        onChange={(e) => setBorderWidth(Number(e.target.value))}
+                                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                                    />
+                                    <div className="flex justify-between text-[10px] text-slate-400 mt-2 font-mono">
+                                        <span>0px</span>
+                                        <span>5px</span>
+                                        <span>10px</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button
                                 onClick={handleRemoveBackground}
                                 disabled={!selectedImage || isProcessing}
@@ -387,7 +412,7 @@ export default function PhotoEngine() {
                             </div>
 
                             {/* DYNAMIC RENDERER */}
-                            <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1 flex flex-col items-center" style={{ "--print-border-color": borderColor }}>
+                            <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1 flex flex-col items-center" style={{ "--print-border-color": borderColor, "--print-border-width": `${borderWidth}px` }}>
                                 {currentPackage.layout.map((group, groupIndex) => (
                                     <div
                                         key={groupIndex}
@@ -411,7 +436,7 @@ export default function PhotoEngine() {
                                                     print:aspect-auto
                                                     photo-box size-${group.type}
                                                 `}
-                                                style={{ border: `1px solid ${borderColor}` }}
+                                                style={{ border: `${borderWidth}px solid ${borderColor}` }}
                                             >
                                                 {selectedImage ? (
                                                     <img src={selectedImage} className="w-full h-full object-cover" alt="ID Photo" />
