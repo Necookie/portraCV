@@ -1,5 +1,5 @@
 import React from 'react';
-import { Palette, Sparkles, Loader2, LayoutTemplate, Shirt, Timer } from 'lucide-react';
+import { Palette, Sparkles, Loader2, LayoutTemplate, Shirt, Timer, PlusSquare, RotateCcw } from 'lucide-react';
 import { PACKAGES } from '../../constants/packages';
 
 /**
@@ -20,7 +20,9 @@ export default function AIStudioControls({
     selectedImage,
     isProcessing,
     handleRemoveBackground,
-    elapsedTime
+    elapsedTime,
+    handleStageJob,
+    handleResetEditor
 }) {
     return (
         <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-5">
@@ -140,10 +142,32 @@ export default function AIStudioControls({
             )}
 
             {/* FUTURE UI PLACEHOLDER: NOT CURRENTLY ACTIVE */}
-            <button disabled className="w-full h-11 bg-stone-50 border border-stone-200 text-stone-400 rounded-2xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
+            <button disabled className="w-full h-11 bg-stone-50 border border-stone-200 text-stone-300 rounded-2xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
                 <span className="flex items-center gap-2"><Shirt size={18} /> Formal Suit</span>
-                <span className="text-[10px] font-bold bg-white text-stone-400 px-2 py-1 rounded border border-stone-200 uppercase">Locked</span>
+                <span className="text-[10px] font-bold bg-white text-stone-300 px-2 py-1 rounded border border-stone-100 uppercase">Locked</span>
             </button>
+
+            {/* MULTI-PRINT CONTROLS */}
+            <div className="pt-1 space-y-4">
+                <hr className="border-stone-100" />
+
+                <div className="grid grid-cols-2 gap-3">
+                    <button
+                        onClick={handleResetEditor}
+                        disabled={!selectedImage && elapsedTime === 0}
+                        className="h-10 border border-stone-200 text-stone-600 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs"
+                    >
+                        <RotateCcw size={14} /> Reset
+                    </button>
+                    <button
+                        onClick={handleStageJob}
+                        disabled={!selectedImage}
+                        className="h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed shadow-sm shadow-emerald-100 transition-all text-xs"
+                    >
+                        <PlusSquare size={14} /> Add to Canvas
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
