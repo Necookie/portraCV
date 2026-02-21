@@ -96,8 +96,9 @@ export default function PhotoEngine() {
     const [originalImage, setOriginalImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [bgColor, setBgColor] = useState("#ffffff");
-    const [activePackageId, setActivePackageId] = useState('mixed'); 
-    
+    const [borderColor, setBorderColor] = useState("#cbd5e1"); // Default border color (slate-300)
+    const [activePackageId, setActivePackageId] = useState('mixed');
+
     // Crop State
     const [isCropping, setIsCropping] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -196,8 +197,8 @@ export default function PhotoEngine() {
                     /* Photo Sizes & Borders */
                     .photo-box { 
                         box-sizing: border-box; 
-                        /* Clear border for cutting - slate-300 */
-                        border: 1px solid #cbd5e1;
+                        /* Clear border for cutting - dynamically set */
+                        border: 1px solid var(--print-border-color, #cbd5e1);
                         background-color: white !important; 
                         overflow: hidden;
                         flex-shrink: 0;
@@ -213,7 +214,7 @@ export default function PhotoEngine() {
             `}</style>
 
             <div className="flex-grow pb-20 relative">
-                
+
                 {/* --- CROPPER OVERLAY --- */}
                 {isCropping && originalImage && (
                     <div className="fixed inset-0 z-50 bg-slate-900/90 flex flex-col items-center justify-center p-4 animate-in fade-in duration-200">
@@ -224,7 +225,7 @@ export default function PhotoEngine() {
                                     <X size={20} />
                                 </button>
                             </div>
-                            
+
                             <div className="relative h-[400px] w-full bg-slate-100">
                                 <Cropper
                                     image={originalImage}
@@ -260,7 +261,7 @@ export default function PhotoEngine() {
                 )}
 
                 <main className="max-w-7xl mx-auto px-4 md:px-6 pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
+
                     {/* LEFT: Controls */}
                     <div className="lg:col-span-5 flex flex-col gap-4 print:hidden">
                         <div className="relative group">
@@ -268,7 +269,7 @@ export default function PhotoEngine() {
                                 {selectedImage ? (
                                     <>
                                         <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-sm" />
-                                        <button 
+                                        <button
                                             onClick={() => { setZoom(1); setIsCropping(true); }}
                                             className="absolute bottom-4 right-4 bg-white text-indigo-600 p-2 rounded-full shadow-lg border border-indigo-100 hover:scale-105 transition-transform"
                                         >
@@ -290,7 +291,7 @@ export default function PhotoEngine() {
                             <div className="flex justify-between items-center">
                                 <h3 className="font-bold text-slate-700 text-sm uppercase tracking-wider">AI Studio</h3>
                                 <div className="flex items-center gap-1 text-indigo-600 font-bold text-xs bg-indigo-50 px-2 py-1 rounded-full">
-                                    <Palette size={12}/> Editor
+                                    <Palette size={12} /> Editor
                                 </div>
                             </div>
 
@@ -304,11 +305,10 @@ export default function PhotoEngine() {
                                         <button
                                             key={pkg.id}
                                             onClick={() => setActivePackageId(pkg.id)}
-                                            className={`p-3 rounded-xl border text-left transition-all ${
-                                                activePackageId === pkg.id 
-                                                ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-600' 
-                                                : 'border-slate-200 hover:border-indigo-300 text-slate-600'
-                                            }`}
+                                            className={`p-3 rounded-xl border text-left transition-all ${activePackageId === pkg.id
+                                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-600'
+                                                    : 'border-slate-200 hover:border-indigo-300 text-slate-600'
+                                                }`}
                                         >
                                             <div className="font-bold text-xs">{pkg.name}</div>
                                             <div className="text-[10px] opacity-70 truncate">{pkg.description}</div>
@@ -323,8 +323,8 @@ export default function PhotoEngine() {
                             <div className="space-y-3">
                                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Background Color</label>
                                 <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                    <input 
-                                        type="color" 
+                                    <input
+                                        type="color"
                                         value={bgColor}
                                         onChange={(e) => setBgColor(e.target.value)}
                                         className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white shadow-sm overflow-hidden"
@@ -336,7 +336,24 @@ export default function PhotoEngine() {
                                 </div>
                             </div>
 
-                            <button 
+                            {/* BORDER COLOR PICKER */}
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Border Color</label>
+                                <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                    <input
+                                        type="color"
+                                        value={borderColor}
+                                        onChange={(e) => setBorderColor(e.target.value)}
+                                        className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white shadow-sm overflow-hidden"
+                                    />
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-mono font-bold text-slate-700 uppercase">{borderColor}</span>
+                                        <p className="text-[10px] text-slate-500">Pick cutline color</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
                                 onClick={handleRemoveBackground}
                                 disabled={!selectedImage || isProcessing}
                                 className="w-full h-12 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center px-4 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-md shadow-indigo-100 transition-all"
@@ -344,15 +361,15 @@ export default function PhotoEngine() {
                                 {isProcessing ? (
                                     <Loader2 size={18} className="animate-spin" />
                                 ) : (
-                                    <span className="flex items-center gap-2"><Sparkles size={18}/> Apply & Process</span>
+                                    <span className="flex items-center gap-2"><Sparkles size={18} /> Apply & Process</span>
                                 )}
                             </button>
 
                             <button disabled className="w-full h-11 bg-slate-50 border border-slate-200 text-slate-400 rounded-xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
-                                <span className="flex items-center gap-2"><Shirt size={18}/> Formal Suit</span>
+                                <span className="flex items-center gap-2"><Shirt size={18} /> Formal Suit</span>
                                 <span className="text-[10px] font-bold bg-white text-slate-400 px-2 py-1 rounded border border-slate-200 uppercase">Locked</span>
                             </button>
-                        </div>  
+                        </div>
 
                         <button onClick={triggerPrint} className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
                             <Printer size={20} /> Print / Save PDF
@@ -368,18 +385,18 @@ export default function PhotoEngine() {
                                 </h2>
                                 <span className="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded text-slate-500">A4 • 210 x 297 mm</span>
                             </div>
-                            
+
                             {/* DYNAMIC RENDERER */}
-                            <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1 flex flex-col items-center">
+                            <div id="print-canvas" className="p-8 print:p-0 bg-white flex-1 flex flex-col items-center" style={{ "--print-border-color": borderColor }}>
                                 {currentPackage.layout.map((group, groupIndex) => (
-                                    <div 
-                                        key={groupIndex} 
+                                    <div
+                                        key={groupIndex}
                                         className={`
                                             w-full grid mb-4 
                                             print:mb-0 print:gap-0 print:w-[8in] print-grid print-grid-cols-${group.cols}
                                             ${currentPackage.hasGap ? 'gap-4' : 'gap-0 justify-center'} 
                                         `}
-                                        style={{ 
+                                        style={{
                                             // Conditional styling for Preview to match Print as closely as possible
                                             gridTemplateColumns: !currentPackage.hasGap && group.type === 'passport'
                                                 ? `repeat(${group.cols}, 35mm)` // Explicitly pack columns for passport preview
@@ -387,13 +404,14 @@ export default function PhotoEngine() {
                                         }}
                                     >
                                         {Array.from({ length: group.count }).map((_, i) => (
-                                            <div 
-                                                key={`${group.type}-${i}`} 
+                                            <div
+                                                key={`${group.type}-${i}`}
                                                 className={`
-                                                    aspect-square bg-white border border-slate-200 relative overflow-hidden
+                                                    aspect-square bg-white relative overflow-hidden
                                                     print:aspect-auto
                                                     photo-box size-${group.type}
                                                 `}
+                                                style={{ border: `1px solid ${borderColor}` }}
                                             >
                                                 {selectedImage ? (
                                                     <img src={selectedImage} className="w-full h-full object-cover" alt="ID Photo" />
