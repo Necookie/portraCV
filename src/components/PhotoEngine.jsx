@@ -127,10 +127,10 @@ export default function PhotoEngine() {
                 @media print {
                     @page { size: A4 portrait; margin: 0; }
                     body { margin: 0; padding: 0; background: white; }
-                    body * { visibility: hidden; }
+                    body *, body *::before, body *::after { visibility: hidden; animation: none !important; transform: none !important; transition: none !important; }
                     /* Only the target canvas grid is allowed to paint onto the paper */
                     #print-canvas, #print-canvas * { visibility: visible; }
-                    #print-canvas { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.5in; }
+                    #print-canvas { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.25in; }
                     
                     /* Dynamic Grid Containers - FORCE ZERO GAP BY DEFAULT */
                     .print-grid { width: 8in; display: grid; gap: 0 !important; margin-bottom: 0; justify-content: center; }
@@ -154,7 +154,7 @@ export default function PhotoEngine() {
                 }
             `}</style>
 
-            <div className="flex-grow pb-20 relative">
+            <div className="flex-grow pb-20 relative print:static print:pb-0">
 
                 {/* --- 1. POPUP MODAL (Hidden by default unless editing) --- */}
                 {isCropping && originalImage && (

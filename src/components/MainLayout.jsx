@@ -9,7 +9,7 @@ import Navbar from './Navbar';
  */
 export default function MainLayout({ children, currentPage, onNavigate, onOpenAuth }) {
     return (
-        <div className="min-h-screen bg-stone-50 bg-dot-pattern font-sans relative overflow-x-hidden">
+        <div className="min-h-screen bg-stone-50 bg-dot-pattern font-sans relative overflow-x-hidden print:static print:bg-none print:bg-white">
             <Navbar
                 currentPage={currentPage}
                 onNavigate={onNavigate}
