@@ -18,20 +18,20 @@ export default function CropperModal({
     setIsCropping
 }) {
     return (
-        <div className="fixed inset-0 z-50 bg-slate-900/90 flex flex-col items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-stone-900/90 flex flex-col items-center justify-center p-4 animate-in fade-in duration-200">
             {/* Main overlay container frame */}
-            <div className="w-full max-w-2xl bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="w-full max-w-2xl bg-white rounded-3xl overflow-hidden flex flex-col shadow-2xl">
 
                 {/* Header bar */}
-                <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                    <h3 className="font-bold text-slate-700">Adjust Photo</h3>
-                    <button onClick={() => setIsCropping(false)} className="text-slate-400 hover:text-red-500">
+                <div className="p-4 border-b border-stone-200 flex justify-between items-center bg-stone-50">
+                    <h3 className="font-bold text-stone-700">Adjust Photo</h3>
+                    <button onClick={() => setIsCropping(false)} className="text-stone-400 hover:text-red-500">
                         <X size={20} />
                     </button>
                 </div>
 
                 {/* Cropping Context bounded to container height */}
-                <div className="relative h-[400px] w-full bg-slate-100">
+                <div className="relative h-[400px] w-full bg-stone-100">
                     <Cropper
                         image={originalImage}
                         crop={crop}
@@ -47,7 +47,7 @@ export default function CropperModal({
                 <div className="p-6 space-y-4">
                     {/* Zoom Range Slider */}
                     <div className="flex items-center gap-4">
-                        <ZoomIn size={18} className="text-slate-400" />
+                        <ZoomIn size={18} className="text-stone-400" />
                         <input
                             type="range"
                             value={zoom}
@@ -55,20 +55,20 @@ export default function CropperModal({
                             max={3}
                             step={0.1}
                             onChange={(e) => setZoom(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                            className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-rose-600"
                         />
                     </div>
                     {/* Action buttons */}
                     <div className="flex gap-3">
                         <button
                             onClick={() => setIsCropping(false)}
-                            className="flex-1 py-3 text-slate-600 font-semibold hover:bg-slate-50 rounded-xl transition-colors border border-slate-200"
+                            className="flex-1 py-3 text-stone-600 font-semibold hover:bg-stone-50 rounded-2xl transition-colors border border-stone-200"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSaveCrop}
-                            className="flex-1 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                            className="flex-1 py-3 bg-rose-600 text-white font-semibold rounded-2xl hover:bg-rose-700 transition-all shadow-lg flex items-center justify-center gap-2"
                         >
                             <Check size={18} /> Apply Crop
                         </button>

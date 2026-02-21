@@ -7,18 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // "The Executive" (Light Mode) Palette
-        background: '#f8fafc', // Slate-50 (Light Grey-Blue foundation)
-        surface:    '#ffffff', // White (Cards, Sidebars, Inputs)
-        primary:    '#4f46e5', // Indigo-600 (Darker Indigo for contrast on white)
-        paper:      '#ffffff', // Pure White (The Resume/Photo Sheet)
-        
+        // "Cozy Café" Aesthetic Palette
+        background: '#fafaf9', // Stone-50 (Warm off-white)
+        surface: '#ffffff', // White (Cards, Sidebars, Inputs)
+        primary: '#e11d48', // Rose-600 (Soft, warm brand accent)
+        paper: '#ffffff', // Pure White
+
         // Status colors
-        success:    '#059669', // Emerald-600 (Darker for light mode)
-        warning:    '#d97706', // Amber-600
+        success: '#059669', // Emerald-600
+        warning: '#d97706', // Amber-600
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'], 
+        sans: ['Nunito', 'sans-serif'],
       }
     },
   },

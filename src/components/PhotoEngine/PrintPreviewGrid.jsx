@@ -14,13 +14,13 @@ export default function PrintPreviewGrid({ currentPackage, selectedImage, border
     };
 
     return (
-        <div className="bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:border-none print:rounded-none">
+        <div className="bg-white border border-stone-200 rounded-2xl shadow-xl overflow-hidden min-h-[600px] flex flex-col print:shadow-none print:border-none print:rounded-none">
             {/* Header / Title block inside the white card frame. This completely hides itself when actually printing */}
-            <div className="border-b border-slate-200 p-4 bg-slate-50/80 flex justify-between items-center print:hidden">
-                <h2 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+            <div className="border-b border-stone-200 p-4 bg-stone-50/80 flex justify-between items-center print:hidden">
+                <h2 className="font-bold text-stone-800 text-lg flex items-center gap-2">
                     Preview: {currentPackage.name}
                 </h2>
-                <span className="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded text-slate-500">
+                <span className="text-xs font-mono bg-white border border-stone-200 px-2 py-1 rounded text-stone-500">
                     A4 • 210 x 297 mm
                 </span>
             </div>
@@ -56,7 +56,7 @@ export default function PrintPreviewGrid({ currentPackage, selectedImage, border
                                 {selectedImage ? (
                                     <img src={selectedImage} className="w-full h-full object-cover" alt="ID Photo" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                    <div className="w-full h-full flex items-center justify-center text-stone-300">
                                         <ImageIcon size={24} />
                                     </div>
                                 )}

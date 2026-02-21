@@ -29,7 +29,7 @@ export default function PhotoEngine() {
     // Process & Settings States
     const [isProcessing, setIsProcessing] = useState(false);
     const [bgColor, setBgColor] = useState("#ffffff");
-    const [borderColor, setBorderColor] = useState("#cbd5e1"); // Default border color (slate-300)
+    const [borderColor, setBorderColor] = useState("#cbd5e1"); // Default border color (stone-300)
     const [borderWidth, setBorderWidth] = useState(1); // Default border width in pixels
     const [activePackageId, setActivePackageId] = useState('mixed');
 
@@ -120,7 +120,7 @@ export default function PhotoEngine() {
 
     // --- RENDER BLOCK ---
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
+        <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col">
 
             {/* INLINE CSS BLOCK defining strict rules exclusively observed during `<window.print()>` */}
             <style>{`
@@ -173,21 +173,21 @@ export default function PhotoEngine() {
 
                         {/* Top: Image Uploader / Preview Context */}
                         <div className="relative group">
-                            <div className={`aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer overflow-hidden relative ${selectedImage ? 'border-indigo-500/50 bg-indigo-50/50' : 'border-slate-300 bg-white hover:border-indigo-500 hover:bg-indigo-50/30'}`}>
+                            <div className={`aspect-[4/3] rounded-3xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center p-6 cursor-pointer overflow-hidden relative ${selectedImage ? 'border-rose-500/50 bg-rose-50/50' : 'border-stone-300 bg-white hover:border-rose-500 hover:bg-rose-50/30'}`}>
                                 {selectedImage ? (
                                     <>
-                                        <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-xl shadow-sm" />
+                                        <img src={selectedImage} alt="Preview" className="w-full h-full object-contain rounded-2xl shadow-sm" />
                                         <button
                                             onClick={() => { setZoom(1); setIsCropping(true); }}
-                                            className="absolute bottom-4 right-4 bg-white text-indigo-600 p-2 rounded-full shadow-lg border border-indigo-100 hover:scale-105 transition-transform"
+                                            className="absolute bottom-4 right-4 bg-white text-rose-600 p-2 rounded-full shadow-lg border border-rose-100 hover:scale-105 transition-transform"
                                         >
                                             <CropIcon size={20} />
                                         </button>
                                     </>
                                 ) : (
                                     <>
-                                        <Upload className="text-indigo-600 mb-2" size={32} />
-                                        <h3 className="text-lg font-semibold text-slate-900">Upload Selfie</h3>
+                                        <Upload className="text-rose-600 mb-2" size={32} />
+                                        <h3 className="text-lg font-semibold text-stone-900">Upload Selfie</h3>
                                         <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                                     </>
                                 )}
@@ -205,7 +205,7 @@ export default function PhotoEngine() {
                         />
 
                         {/* Bottom: Print Access */}
-                        <button onClick={triggerPrint} className="w-full bg-white border border-slate-200 hover:border-indigo-500/50 hover:bg-indigo-50/50 text-slate-700 hover:text-indigo-600 h-12 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
+                        <button onClick={triggerPrint} className="w-full bg-white border border-stone-200 hover:border-rose-500/50 hover:bg-rose-50/50 text-stone-700 hover:text-rose-600 h-12 rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
                             <Printer size={20} /> Print / Save PDF
                         </button>
                     </div>

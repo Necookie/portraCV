@@ -23,18 +23,18 @@ export default function AIStudioControls({
     elapsedTime
 }) {
     return (
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+        <div className="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-5">
             {/* Header of Studio Control Panel */}
             <div className="flex justify-between items-center">
-                <h3 className="font-bold text-slate-700 text-sm uppercase tracking-wider">AI Studio</h3>
-                <div className="flex items-center gap-1 text-indigo-600 font-bold text-xs bg-indigo-50 px-2 py-1 rounded-full">
+                <h3 className="font-bold text-stone-700 text-sm uppercase tracking-wider">AI Studio</h3>
+                <div className="flex items-center gap-1 text-rose-600 font-bold text-xs bg-rose-50 px-2 py-1 rounded-full">
                     <Palette size={12} /> Editor
                 </div>
             </div>
 
             {/* PACKAGE SELECTOR GRID */}
             <div className="space-y-3">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight flex items-center gap-2">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-tight flex items-center gap-2">
                     <LayoutTemplate size={12} /> Select Package
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -42,9 +42,9 @@ export default function AIStudioControls({
                         <button
                             key={pkg.id}
                             onClick={() => setActivePackageId(pkg.id)}
-                            className={`p-3 rounded-xl border text-left transition-all ${activePackageId === pkg.id
-                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-600'
-                                    : 'border-slate-200 hover:border-indigo-300 text-slate-600'
+                            className={`p-3 rounded-2xl border text-left transition-all ${activePackageId === pkg.id
+                                    ? 'border-rose-600 bg-rose-50 text-rose-900 ring-1 ring-rose-600'
+                                    : 'border-stone-200 hover:border-rose-300 text-stone-600'
                                 }`}
                         >
                             <div className="font-bold text-xs">{pkg.name}</div>
@@ -54,12 +54,12 @@ export default function AIStudioControls({
                 </div>
             </div>
 
-            <hr className="border-slate-100" />
+            <hr className="border-stone-100" />
 
             {/* BACKGROUND COLOR PICKER */}
             <div className="space-y-3">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Background Color</label>
-                <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-tight">Background Color</label>
+                <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-2xl border border-stone-100">
                     <input
                         type="color"
                         value={bgColor}
@@ -67,16 +67,16 @@ export default function AIStudioControls({
                         className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white shadow-sm overflow-hidden"
                     />
                     <div className="flex flex-col">
-                        <span className="text-sm font-mono font-bold text-slate-700 uppercase">{bgColor}</span>
-                        <p className="text-[10px] text-slate-500">Pick ID background</p>
+                        <span className="text-sm font-mono font-bold text-stone-700 uppercase">{bgColor}</span>
+                        <p className="text-[10px] text-stone-500">Pick ID background</p>
                     </div>
                 </div>
             </div>
 
             {/* CUTLINE/BORDER COLOR PICKER */}
             <div className="space-y-3">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Border Color</label>
-                <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-tight">Border Color</label>
+                <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-2xl border border-stone-100">
                     <input
                         type="color"
                         value={borderColor}
@@ -84,19 +84,19 @@ export default function AIStudioControls({
                         className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white shadow-sm overflow-hidden"
                     />
                     <div className="flex flex-col">
-                        <span className="text-sm font-mono font-bold text-slate-700 uppercase">{borderColor}</span>
-                        <p className="text-[10px] text-slate-500">Pick cutline color</p>
+                        <span className="text-sm font-mono font-bold text-stone-700 uppercase">{borderColor}</span>
+                        <p className="text-[10px] text-stone-500">Pick cutline color</p>
                     </div>
                 </div>
             </div>
 
             {/* BORDER THICKNESS SLIDER */}
             <div className="space-y-3">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-tight flex justify-between">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-tight flex justify-between">
                     <span>Border Thickness</span>
-                    <span className="text-indigo-600 font-mono">{borderWidth.toFixed(1)}px</span>
+                    <span className="text-rose-600 font-mono">{borderWidth.toFixed(1)}px</span>
                 </label>
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="p-4 bg-stone-50 rounded-2xl border border-stone-100">
                     <input
                         type="range"
                         min="0"
@@ -104,9 +104,9 @@ export default function AIStudioControls({
                         step="0.1"
                         value={borderWidth}
                         onChange={(e) => setBorderWidth(Number(e.target.value))}
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-rose-600"
                     />
-                    <div className="flex justify-between text-[10px] text-slate-400 mt-2 font-mono">
+                    <div className="flex justify-between text-[10px] text-stone-400 mt-2 font-mono">
                         <span>0px</span>
                         <span>5px</span>
                         <span>10px</span>
@@ -118,7 +118,7 @@ export default function AIStudioControls({
             <button
                 onClick={handleRemoveBackground}
                 disabled={!selectedImage || isProcessing}
-                className="w-full h-12 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center px-4 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-md shadow-indigo-100 transition-all font-mono"
+                className="w-full h-12 bg-rose-600 text-white rounded-2xl font-semibold flex items-center justify-center px-4 hover:bg-rose-700 disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed shadow-md shadow-rose-100 transition-all font-mono"
             >
                 {/* Dynamically adjust button copy based on processing state to provide user feedback */}
                 {isProcessing ? (
@@ -132,9 +132,9 @@ export default function AIStudioControls({
             </button>
 
             {/* FUTURE UI PLACEHOLDER: NOT CURRENTLY ACTIVE */}
-            <button disabled className="w-full h-11 bg-slate-50 border border-slate-200 text-slate-400 rounded-xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
+            <button disabled className="w-full h-11 bg-stone-50 border border-stone-200 text-stone-400 rounded-2xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
                 <span className="flex items-center gap-2"><Shirt size={18} /> Formal Suit</span>
-                <span className="text-[10px] font-bold bg-white text-slate-400 px-2 py-1 rounded border border-slate-200 uppercase">Locked</span>
+                <span className="text-[10px] font-bold bg-white text-stone-400 px-2 py-1 rounded border border-stone-200 uppercase">Locked</span>
             </button>
         </div>
     );
