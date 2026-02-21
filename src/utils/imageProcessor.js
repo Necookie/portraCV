@@ -31,29 +31,47 @@ export async function getCroppedImg(imageSrc, pixelCrop) {
 
     if (!ctx) return null;
 
-    // Set canvas to the exact size of the user's cropped area
-    canvas.width = pixelCrop.width;
-    canvas.height = pixelCrop.height;
+    // --- CLIENT-SIDE PERFORMANCE OPTIMIZATION ---
+    // Caps the physical dimensions of the image uploaded to the backend to drastically reduce latency
+    const MAX_DIMENSION = 1000;
 
-    // Draw only the cropped portion of the image onto the canvas
+    // Calculate aspect-preserving output dimensions
+    let outputWidth = pixelCrop.width;
+    let outputHeight = pixelCrop.height;
+
+    // If the crop area from the raw camera is extremely high-res, scale it down proportionally
+    if (outputWidth > MAX_DIMENSION || outputHeight > MAX_DIMENSION) {
+        if (outputWidth > outputHeight) {
+            outputHeight = Math.round((outputHeight * MAX_DIMENSION) / outputWidth);
+            outputWidth = MAX_DIMENSION;
+        } else {
+            outputWidth = Math.round((outputWidth * MAX_DIMENSION) / outputHeight);
+            outputHeight = MAX_DIMENSION;
+        }
+    }
+
+    // Set canvas to the dynamically downscaled size
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
+
+    // Extract the precise chunk from the massive raw image and paint it squished into our optimized canvas
     ctx.drawImage(
         image,
-        pixelCrop.x,
-        pixelCrop.y,
-        pixelCrop.width,
-        pixelCrop.height,
-        0,
-        0,
-        pixelCrop.width,
-        pixelCrop.height
+        pixelCrop.x,             // Source anchor X
+        pixelCrop.y,             // Source anchor Y
+        pixelCrop.width,         // Source chunk width
+        pixelCrop.height,        // Source chunk height
+        0, 0,                    // Output canvas anchor
+        outputWidth,             // Output stretched width
+        outputHeight             // Output stretched height
     );
 
-    // Convert canvas contents into a JPEG Blob string file format
+    // Convert canvas contents into a compressed JPEG Blob (forcing 0.80 lossy quality instead of 0.92 default)
     return new Promise((resolve) => {
         canvas.toBlob((blob) => {
             const fileUrl = URL.createObjectURL(blob);
             resolve({ blob, fileUrl });
-        }, 'image/jpeg');
+        }, 'image/jpeg', 0.80);
     });
 }
 
