@@ -12,3 +12,10 @@
         font-family: 'Nunito', sans-serif;
     }
 }
+
+@layer utilities {
+    .bg-dot-pattern {
+        background-image: radial-gradient(#e7e5e4 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+}

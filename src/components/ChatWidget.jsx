@@ -180,7 +180,7 @@ export default function ChatWidget() {
       {/* Launcher Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`h-14 w-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 transform hover:scale-105 flex items-center justify-center
+        className={`h-14 w-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 transform hover:scale-105 flex items-center justify-center animate-float
           ${isOpen ? 'bg-white text-stone-800 rotate-90' : 'bg-stone-900 text-white hover:bg-stone-800'}`}
       >
         {isOpen ? <X size={24} /> : <Sparkles size={24} />}

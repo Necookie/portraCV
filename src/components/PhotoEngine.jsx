@@ -169,7 +169,7 @@ export default function PhotoEngine() {
                 <main className="max-w-7xl mx-auto px-4 md:px-6 pt-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                     {/* --- 2. LEFT COLUMN (Core Interactive Elements) --- */}
-                    <div className="lg:col-span-5 flex flex-col gap-4 print:hidden">
+                    <div className="lg:col-span-5 flex flex-col gap-4 print:hidden animate-fade-in-up">
 
                         {/* Top: Image Uploader / Preview Context */}
                         <div className="relative group">
@@ -211,7 +211,7 @@ export default function PhotoEngine() {
                     </div>
 
                     {/* --- 3. RIGHT COLUMN (Render Map / A4 Print Target ) --- */}
-                    <div className="lg:col-span-7">
+                    <div className="lg:col-span-7 animate-fade-in-up-delay-1">
                         <PrintPreviewGrid
                             currentPackage={currentPackage}
                             selectedImage={selectedImage}
