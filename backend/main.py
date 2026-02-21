@@ -64,6 +64,10 @@ def process_image(image_bytes, bg_color_hex):
     result.save(img_byte_arr, format='PNG')
     return img_byte_arr.getvalue()
 
+@app.get("/keep-alive")
+async def keep_alive():
+    return {"status": "ok", "message": "Background remover is awake"}
+
 @app.post("/remove-bg")
 async def remove_bg(file: UploadFile = File(...), color: str = Form(...)):
     image_bytes = await file.read()
