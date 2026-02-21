@@ -100,6 +100,9 @@ export default function PhotoEngine() {
     const [borderWidth, setBorderWidth] = useState(1); // Default border width in pixels
     const [activePackageId, setActivePackageId] = useState('mixed');
 
+    // Performance State
+    const [elapsedTime, setElapsedTime] = useState(0);
+
     // Crop State
     const [isCropping, setIsCropping] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -140,6 +143,12 @@ export default function PhotoEngine() {
     const handleRemoveBackground = async () => {
         if (!selectedFile) return;
         setIsProcessing(true);
+        setElapsedTime(0);
+
+        const startTime = Date.now();
+        const timerInterval = setInterval(() => {
+            setElapsedTime((Date.now() - startTime) / 1000);
+        }, 100);
 
         try {
             const formData = new FormData();
@@ -163,6 +172,7 @@ export default function PhotoEngine() {
             console.error("Connection Failed", error);
             alert("Connection failed. Ensure the backend URL is correct.");
         } finally {
+            clearInterval(timerInterval);
             setIsProcessing(false);
         }
     };
@@ -381,12 +391,15 @@ export default function PhotoEngine() {
                             <button
                                 onClick={handleRemoveBackground}
                                 disabled={!selectedImage || isProcessing}
-                                className="w-full h-12 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center px-4 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-md shadow-indigo-100 transition-all"
+                                className="w-full h-12 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center px-4 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shadow-md shadow-indigo-100 transition-all font-mono"
                             >
                                 {isProcessing ? (
-                                    <Loader2 size={18} className="animate-spin" />
+                                    <>
+                                        <Loader2 size={18} className="animate-spin mr-2" />
+                                        <span>Processing... {elapsedTime.toFixed(1)}s</span>
+                                    </>
                                 ) : (
-                                    <span className="flex items-center gap-2"><Sparkles size={18} /> Apply & Process</span>
+                                    <span className="flex items-center gap-2 font-sans"><Sparkles size={18} /> Apply & Process</span>
                                 )}
                             </button>
 
