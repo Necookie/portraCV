@@ -83,7 +83,7 @@ export default function BackgroundRemover() {
      * Reusable image compression logic locally decoupled from Cropper
      */
     const compressAndResizeImage = async (file) => {
-        const MAX_DIMENSION = 1000;
+        const MAX_DIMENSION = 800;
         const objectUrl = URL.createObjectURL(file);
         const image = new Image();
 
@@ -135,66 +135,68 @@ export default function BackgroundRemover() {
     // ==========================================
     if (!previewUrl) {
         return (
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 xl:py-32 animate-fade-in-up">
-                <div className="grid lg:grid-cols-2 gap-16 lg:gap-8 items-center">
-
-                    {/* LEFT COLUMN: Marketing Typography */}
-                    <div className="space-y-8 max-w-lg">
-                        <h1 className="text-5xl lg:text-7xl font-black text-stone-800 tracking-tighter leading-[1.1]">
-                            Remove Image Background
-                            <br />
-                            <span className="text-2xl lg:text-3xl font-bold bg-rose-600 text-white px-4 py-2 mt-4 inline-block rounded-2xl rotate-[-2deg] shadow-lg">
-                                100% Automatically and Free
-                            </span>
-                        </h1>
-                        <p className="text-xl text-stone-500 font-medium leading-relaxed">
-                            Instantly strip away surroundings using AI. Fast, secure, and right in your browser. Get stunning cutouts in just seconds.
-                        </p>
-                        <ul className="space-y-3">
-                            <li className="flex items-center gap-3 text-stone-600 font-semibold">
-                                <div className="bg-emerald-100 text-emerald-600 p-1 rounded-full"><ShieldCheck size={18} /></div>
-                                Secures your data by strictly keeping it client-side
-                            </li>
-                            <li className="flex items-center gap-3 text-stone-600 font-semibold">
-                                <div className="bg-blue-100 text-blue-600 p-1 rounded-full"><Timer size={18} /></div>
-                                Blazing fast <span className="font-bold underline text-stone-800">&lt;15s</span> processing turnarounds
-                            </li>
-                        </ul>
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 animate-fade-in-up">
+                <div className="text-center space-y-4 mb-10">
+                    <div className="inline-flex items-center justify-center p-3 bg-rose-100 text-rose-600 rounded-3xl mb-1 shadow-sm">
+                        <Sparkles size={28} />
                     </div>
-
-                    {/* RIGHT COLUMN: Massive Dropzone Card */}
-                    <div className="relative">
-                        {/* Abstract background decorative blob */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[120%] bg-gradient-to-br from-rose-100 to-amber-50 rounded-[4rem] -z-10 blur-3xl opacity-50"></div>
-
-                        <div className="bg-white/90 backdrop-blur-xl border border-white/50 shadow-2xl rounded-[3rem] p-8 lg:p-12 hover:shadow-rose-100/50 transition-all duration-500 group relative overflow-hidden">
-
-                            {/* Inner Dashed Zone */}
-                            <label className="w-full min-h-[400px] border-4 border-dashed border-stone-200 group-hover:border-rose-300 rounded-[2rem] flex flex-col items-center justify-center p-8 text-center cursor-pointer transition-colors hover:bg-rose-50/30">
-
-                                <div className="bg-rose-600 text-white rounded-full px-8 py-5 text-xl font-bold shadow-xl shadow-rose-600/30 group-hover:-translate-y-1 transition-transform flex items-center gap-3 mb-8">
-                                    <Upload size={24} /> Upload Image
-                                </div>
-
-                                <h3 className="text-2xl font-bold text-stone-700 mb-2">or drop a file,</h3>
-                                <p className="text-stone-400 font-medium">paste image or <span className="underline decoration-stone-300 underline-offset-4">URL</span></p>
-
-                                <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                            </label>
-
-                            {/* Processing Overlay (If Auto-Trigger is running) */}
-                            {isProcessing && (
-                                <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center rounded-[3rem]">
-                                    <Loader2 size={48} className="text-rose-600 animate-spin mb-4" />
-                                    <p className="text-xl font-bold text-stone-700">Extracting Subject...</p>
-                                    <p className="text-stone-500 font-mono mt-2">{elapsedTime.toFixed(1)}s elapsed</p>
-                                </div>
-                            )}
-
-                        </div>
-                    </div>
-
+                    <h1 className="text-4xl lg:text-5xl font-black text-stone-800 tracking-tight">
+                        AI Background <span className="text-rose-600">Remover</span>
+                    </h1>
+                    <p className="text-lg text-stone-500 font-medium max-w-2xl mx-auto">
+                        Drop any photo below and let our AI instantly strip away the background.
+                    </p>
                 </div>
+
+                <div className="relative max-w-2xl mx-auto">
+                    {/* Abstract background decorative blob */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-br from-rose-100 to-amber-50 rounded-[4rem] -z-10 blur-3xl opacity-60"></div>
+
+                    <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl rounded-[3rem] p-6 lg:p-10 hover:shadow-rose-100/50 transition-all duration-500 group relative overflow-hidden">
+
+                        {/* Inner Dashed Zone */}
+                        <label className="w-full min-h-[320px] border-4 border-dashed border-stone-200 group-hover:border-rose-300 rounded-[2rem] flex flex-col items-center justify-center p-8 text-center cursor-pointer transition-colors hover:bg-rose-50/50">
+
+                            <div className="bg-rose-600 text-white rounded-2xl px-6 py-3 text-lg font-bold shadow-xl shadow-rose-600/20 group-hover:-translate-y-1 transition-transform flex items-center gap-3 mb-4">
+                                <Upload size={20} /> Select a Photo
+                            </div>
+
+                            <h3 className="text-xl font-bold text-stone-700 mb-1">or drag and drop it here</h3>
+                            <p className="text-stone-400 font-medium text-sm">Supports JPG, PNG up to 10MB</p>
+
+                            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                        </label>
+
+                        {/* Processing Overlay (If Auto-Trigger is running) */}
+                        {isProcessing && (
+                            <div className="absolute inset-0 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center rounded-[3rem] z-20">
+                                <Loader2 size={40} className="text-rose-600 animate-spin mb-4" />
+                                <p className="text-lg font-bold text-stone-700">Extracting Subject...</p>
+                                <p className="text-stone-500 font-mono mt-1 text-sm">{elapsedTime.toFixed(1)}s elapsed</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Features Row */}
+                <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-10 text-center">
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="bg-emerald-50 text-emerald-600 p-3 rounded-2xl"><ShieldCheck size={22} /></div>
+                        <h4 className="font-bold text-stone-700 text-sm">100% Secure</h4>
+                        <p className="text-[10px] text-stone-500 uppercase tracking-wider font-bold">Client-side processing</p>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="bg-blue-50 text-blue-600 p-3 rounded-2xl"><Timer size={22} /></div>
+                        <h4 className="font-bold text-stone-700 text-sm">Automated AI</h4>
+                        <p className="text-[10px] text-stone-500 uppercase tracking-wider font-bold">No manual cutting</p>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="bg-purple-50 text-purple-600 p-3 rounded-2xl"><ImageIcon size={22} /></div>
+                        <h4 className="font-bold text-stone-700 text-sm">High Quality</h4>
+                        <p className="text-[10px] text-stone-500 uppercase tracking-wider font-bold">Perfect for PortraCV</p>
+                    </div>
+                </div>
+
             </div>
         );
     }

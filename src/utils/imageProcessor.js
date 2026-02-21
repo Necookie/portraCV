@@ -33,7 +33,7 @@ export async function getCroppedImg(imageSrc, pixelCrop) {
 
     // --- CLIENT-SIDE PERFORMANCE OPTIMIZATION ---
     // Caps the physical dimensions of the image uploaded to the backend to drastically reduce latency
-    const MAX_DIMENSION = 1000;
+    const MAX_DIMENSION = 800;
 
     // Calculate aspect-preserving output dimensions
     let outputWidth = pixelCrop.width;
