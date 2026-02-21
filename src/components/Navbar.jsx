@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, LayoutTemplate, User, LogOut } from 'lucide-react';
+import { Camera, LayoutTemplate, User, LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar({ onNavigate, currentPage, onLogin }) {
@@ -25,6 +25,9 @@ export default function Navbar({ onNavigate, currentPage, onLogin }) {
                         <div className="hidden md:flex items-center gap-1">
                             <button onClick={() => onNavigate('engine')} className={getLinkClass('engine')}>
                                 <span className="flex items-center gap-2"><LayoutTemplate size={18} /> Layout Engine</span>
+                            </button>
+                            <button onClick={() => onNavigate('bg-remover')} className={getLinkClass('bg-remover')}>
+                                <span className="flex items-center gap-2"><Sparkles size={18} /> Background Remover</span>
                             </button>
                         </div>
                     </div>

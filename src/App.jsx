@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import MainLayout from './components/MainLayout';
 import PhotoEngine from './components/PhotoEngine';
+import BackgroundRemover from './components/BackgroundRemover';
 import LandingPage from './components/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthModal from './components/AuthModal';
@@ -46,7 +47,7 @@ function AppContent() {
    * and prompts the Auth Modal if the user is unauthenticated.
    */
   const handleNavigate = (page) => {
-    if (page === 'engine' && !user) {
+    if ((page === 'engine' || page === 'bg-remover') && !user) {
       setShowAuthModal(true);
     } else {
       setCurrentPage(page);
@@ -71,11 +72,15 @@ function AppContent() {
         onNavigate={handleNavigate}
         onOpenAuth={() => setShowAuthModal(true)}
       >
-        {currentPage === 'landing' ? (
-          <LandingPage onNavigate={handleNavigate} />
-        ) : (
+        {currentPage === 'landing' && <LandingPage onNavigate={handleNavigate} />}
+        {currentPage === 'engine' && (
           <ProtectedRoute>
             <PhotoEngine />
+          </ProtectedRoute>
+        )}
+        {currentPage === 'bg-remover' && (
+          <ProtectedRoute>
+            <BackgroundRemover />
           </ProtectedRoute>
         )}
       </MainLayout>
