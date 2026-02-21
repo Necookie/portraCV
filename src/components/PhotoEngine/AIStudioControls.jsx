@@ -1,5 +1,5 @@
 import React from 'react';
-import { Palette, Sparkles, Loader2, LayoutTemplate, Shirt } from 'lucide-react';
+import { Palette, Sparkles, Loader2, LayoutTemplate, Shirt, Timer } from 'lucide-react';
 import { PACKAGES } from '../../constants/packages';
 
 /**
@@ -43,8 +43,8 @@ export default function AIStudioControls({
                             key={pkg.id}
                             onClick={() => setActivePackageId(pkg.id)}
                             className={`p-3 rounded-2xl border text-left transition-all ${activePackageId === pkg.id
-                                    ? 'border-rose-600 bg-rose-50 text-rose-900 ring-1 ring-rose-600'
-                                    : 'border-stone-200 hover:border-rose-300 text-stone-600'
+                                ? 'border-rose-600 bg-rose-50 text-rose-900 ring-1 ring-rose-600'
+                                : 'border-stone-200 hover:border-rose-300 text-stone-600'
                                 }`}
                         >
                             <div className="font-bold text-xs">{pkg.name}</div>
@@ -130,6 +130,14 @@ export default function AIStudioControls({
                     <span className="flex items-center gap-2 font-sans"><Sparkles size={18} /> Apply & Process</span>
                 )}
             </button>
+
+            {/* PERFORMANCE STATS - Shown after successful generation */}
+            {!isProcessing && elapsedTime > 0 && (
+                <div className="flex items-center justify-center gap-1.5 text-[11px] font-bold text-stone-500 bg-stone-100/50 py-2 px-3 rounded-2xl border border-stone-200 mx-auto w-full animate-fade-in-up transition-all">
+                    <Timer size={14} className="text-emerald-500" />
+                    <span>Generation applied smoothly in <span className="text-stone-700">{elapsedTime.toFixed(1)}</span> seconds</span>
+                </div>
+            )}
 
             {/* FUTURE UI PLACEHOLDER: NOT CURRENTLY ACTIVE */}
             <button disabled className="w-full h-11 bg-stone-50 border border-stone-200 text-stone-400 rounded-2xl font-medium flex items-center justify-between px-4 cursor-not-allowed">
