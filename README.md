@@ -23,6 +23,11 @@ Designed specifically to save expensive photo paper in commercial printing setti
 - **Mix & Match:** Stage different people, different background colors, and different layouts (e.g., a mix of 2x2s and Passports) onto the exact same A4 sheet.
 - **Precision Margins:** The print engine overrides browser defaults to perfectly center the photo grid, utilizing 100% of the printable A4 area.
 
+### ✨ Standalone AI Cutout Tool
+A completely dedicated, distraction-free environment strictly for removing backgrounds outside of the print engine context.
+- **Premium Two-State UI:** Features a graceful "Landing Page" to "Workspace" flow inspired by industry leaders, maintaining the distinct PortraCV cozy aesthetic.
+- **Direct HD Downloads:** Export transparent or customized colored background PNGs instantly to your local machine.
+
 ---
 
 ## 🛠️ Tech Stack
