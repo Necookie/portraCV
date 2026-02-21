@@ -78,10 +78,12 @@ export default function PrintPreviewGrid({ currentPackage, selectedImage, border
                 {/* 2. THE LIVE PREVIEW DRAFT SECTION */}
                 {/* We only render the live preview if they are actively editing an image or have zero staged jobs */}
                 {(selectedImage || stagedJobs.length === 0) && (
-                    <div className="w-full opacity-50 hover:opacity-100 transition-opacity relative group pt-8 border-t border-dashed border-stone-200 print:hidden mt-auto">
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 text-xs font-bold text-stone-400 uppercase tracking-widest border border-stone-200 rounded-full">
-                            Live Staging Draft
-                        </div>
+                    <div className={`w-full opacity-50 hover:opacity-100 transition-opacity relative group print:hidden ${stagedJobs.length > 0 ? 'pt-8 mt-8 border-t border-dashed border-stone-200' : ''}`}>
+                        {stagedJobs.length > 0 && (
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 text-xs font-bold text-stone-400 uppercase tracking-widest border border-stone-200 rounded-full">
+                                Live Staging Draft
+                            </div>
+                        )}
                         {currentPackage.layout.map((group, groupIndex) => (
                             <div
                                 key={`live-${groupIndex}`}
