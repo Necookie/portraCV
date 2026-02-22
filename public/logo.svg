@@ -1,0 +1,31 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#F8F4EF"/>
+  
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#7A3935" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Background shape to represent portrait bounds -->
+  <path d="M120 400 C120 300, 200 240, 256 240 C312 240, 392 300, 392 400" stroke="#CD817C" stroke-width="48" stroke-linecap="round" fill="none" filter="url(#shadow)"/>
+  <circle cx="256" cy="160" r="72" fill="#CD817C" filter="url(#shadow)"/>
+
+  <!-- Camera Lens overlaying the face -->
+  <circle cx="340" cy="280" r="96" fill="#9C4742" filter="url(#shadow)"/>
+  <circle cx="340" cy="280" r="64" fill="#BB5D58"/>
+  <circle cx="340" cy="280" r="32" fill="#5E2A27"/>
+  <circle cx="360" cy="260" r="16" fill="#FFFFFF" fill-opacity="0.8"/>
+
+  <!-- Magic Wand extending across -->
+  <rect x="230" y="380" width="180" height="32" rx="16" transform="rotate(-40 230 380)" fill="#A84C46" filter="url(#shadow)"/>
+  <!-- Wand Tip -->
+  <rect x="368" y="264" width="40" height="32" rx="12" transform="rotate(-40 368 264)" fill="#E8C3BA" />
+
+  <!-- Sparkles -->
+  <path d="M 420 160 Q 435 160 435 145 Q 435 160 450 160 Q 435 160 435 175 Q 435 160 420 160 Z" fill="#BB5D58"/>
+  <path d="M 450 200 Q 460 200 460 190 Q 460 200 470 200 Q 460 200 460 210 Q 460 200 450 200 Z" fill="#BB5D58"/>
+
+  <!-- Brand Name -->
+  <text x="256" y="470" font-family="'Inter', system-ui, -apple-system, sans-serif" font-weight="800" font-size="52" fill="#9C4742" text-anchor="middle" letter-spacing="-1">PortraCV</text>
+</svg>
