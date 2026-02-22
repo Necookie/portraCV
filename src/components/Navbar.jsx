@@ -19,7 +19,7 @@ export default function Navbar({ onNavigate, currentPage, onLogin }) {
                     {/* LEFT SIDE: Brand & Navigation Links */}
                     <div className="flex items-center gap-8">
                         <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('landing')}>
-                            <div className="bg-rose-50 p-2 rounded-2xl text-rose-600"><Camera size={24} /></div>
+                            <img src="/logo.png" alt="PortraCV Logo" className="w-10 h-10 rounded-xl object-contain shadow-sm" />
                             <span className="text-xl font-bold text-stone-900 tracking-tight">PortraCV</span>
                         </div>
                         <div className="hidden md:flex items-center gap-1">
