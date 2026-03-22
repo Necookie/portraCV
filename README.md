@@ -1,64 +1,73 @@
-# 🚀 PortraCV - AI Photo & Resume Studio
+# PortraCV
 
-**Version:** 1.0.0 (Beta Release)  
-**Designer & Developer:** Dheyn Michael Orlanda  
+PortraCV is a React + Vite app for ID photo workflows. It helps small photo or printing shops crop portraits, remove backgrounds, stage multiple jobs on one A4 sheet, and print clean passport or ID layouts faster.
 
-PortraCV is a productivity web application designed for job seekers and printing businesses. It streamlines the process of editing, organizing, and printing physical identification photos, saving time, paper, and money for photo booth operators.
+## What It Does
 
----
+- Upload and crop a portrait before processing
+- Remove backgrounds for ID photos
+- Apply white, transparent, or custom background colors
+- Stage multiple people on a single print sheet
+- Print preset layouts like `2x2`, `1x1`, and `35x45mm`
+- Gate editing tools behind Supabase auth
+- Show a small in-app assistant powered by Gemini, with OpenAI fallback
 
-## ✨ Key Features
+## Stack
 
-### 🎨 The "Cozy" Aesthetic UI
-Moving away from cold corporate themes, PortraCV features a warm, inviting `Stone/Rose` color palette. The interface is meticulously designed with rounded elements, deep drop shadows, interactive hover states, and smooth CSS keyframe animations (like floating widgets and cascade-in layouts) to provide a premium, dynamic feel.
+- Frontend: React 19, Vite, Tailwind CSS
+- Auth: Supabase
+- Image editing: `react-easy-crop`, Canvas API
+- AI background removal: FastAPI + BiRefNet in [`backend/`](/C:/Users/dheyn/Documents/02_Dev/portraCV/backend)
 
-### 🤖 AI Background Removal (Hugging Face Integration)
-Tired of manually cutting out backgrounds in Photoshop? PortraCV integrates with a Python/FastAPI backend hosted on Hugging Face Spaces to instantly strip backgrounds from uploaded selfies using machine learning.
-- **Client-Side Optimization:** Large 10MB+ camera uploads are instantly downscaled and compressed in the browser before being sent to the AI processing layer, slashing generation times from ~40s down to ~15s without losing physical print quality (maintains 300 DPI).
-- **Customization:** Easily swap the transparent background for any hex color (e.g., standard ID Blue or White).
+## Project Structure
 
-### 🖨️ Multi-Image Print Canvas
-Designed specifically to save expensive photo paper in commercial printing settings.
-- **Job Staging:** Instead of printing one person at a time, upload a photo, edit it, and "Add to Canvas". 
-- **Mix & Match:** Stage different people, different background colors, and different layouts (e.g., a mix of 2x2s and Passports) onto the exact same A4 sheet.
-- **Precision Margins:** The print engine overrides browser defaults to perfectly center the photo grid, utilizing 100% of the printable A4 area.
+- [`src/components/`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/components) UI and feature components
+- [`src/context/AuthContext.jsx`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/context/AuthContext.jsx) auth/session handling
+- [`src/utils/imageProcessor.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/utils/imageProcessor.js) crop + background-removal requests
+- [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js) print layout presets
+- [`backend/main.py`](/C:/Users/dheyn/Documents/02_Dev/portraCV/backend/main.py) Python API for background removal
 
-### ✨ Standalone AI Cutout Tool
-A completely dedicated, distraction-free environment strictly for removing backgrounds outside of the print engine context.
-- **Premium Two-State UI:** Features a graceful "Landing Page" to "Workspace" flow inspired by industry leaders, maintaining the distinct PortraCV cozy aesthetic.
-- **Direct HD Downloads:** Export transparent or customized colored background PNGs instantly to your local machine.
+## Run Locally
 
----
+```bash
+npm install
+npm run dev
+```
 
-## 🛠️ Tech Stack
+Open `http://localhost:5173`.
 
-* **Frontend Framework:** React.js + Vite
-* **Styling & Animation:** Tailwind CSS (v3)
-* **Icons:** Lucide-React
-* **Image Processing:** `react-easy-crop` & HTML5 Canvas API
-* **Backend Integration:** Python, FastAPI, Hugging Face `rembg` (RMBG-1.4 model)
+## Environment Variables
 
----
+Create a `.env` file in the project root:
 
-## 🚀 Getting Started
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_GEMINI_API_KEY=your_gemini_api_key
+VITE_OPENAI_API_KEY=your_openai_api_key
+```
 
-To run the application locally on your machine:
+Notes:
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Necookie/portraCV.git
-   cd portraCV
-   ```
+- `VITE_OPENAI_API_KEY` is optional and is only used as a fallback in the chat widget.
+- The frontend currently points to a hosted background-removal API in [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js).
 
-2. **Install frontend dependencies:**
-   ```bash
-   npm install
-   ```
+## Backend
 
-3. **Start the Vite development server:**
-   ```bash
-   npm run dev
-   ```
+The frontend can work with the hosted API as-is, but the repo also includes the FastAPI service used for background removal.
 
-4. **Open in Browser:**
-   Navigate to `http://localhost:5173` to view the application.
+Install backend dependencies:
+
+```bash
+cd backend
+pip install -r requirements.txt
+python main.py
+```
+
+If you run your own backend, update `BACKEND_URL` in [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js).
+
+## Current Notes
+
+- Protected pages require a valid Supabase session.
+- Password recovery and account deletion rely on Supabase auth/RPC setup.
+- The app includes an upcoming "AI Formal Attire" feature in the UI, but it is not active yet.
