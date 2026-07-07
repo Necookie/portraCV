@@ -18,11 +18,11 @@ const INITIAL_MESSAGE = {
 
 // Quick-action pills shown on first load to guide new users.
 const QUICK_SUGGESTIONS = [
-  "What layouts are available?",
+  "How do I make an ID layout?",
   "How do I remove a background?",
-  "Why can't I log in?",
-  "Who made PortraCV?",
+  "I can't log in",
   "How do I print my photos?",
+  "Who made this app?",
 ];
 
 // ============================================================
