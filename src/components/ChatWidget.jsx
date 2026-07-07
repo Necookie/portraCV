@@ -64,7 +64,7 @@ export default function ChatWidget() {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       systemInstruction: SYSTEM_PROMPT,
       safetySettings: SAFETY_SETTINGS,
     });
@@ -146,6 +146,15 @@ export default function ChatWidget() {
       } else if (error.message === "SAFETY_BLOCKED") {
         errorText =
           "I can't respond to that request. Let's keep things focused on PortraCV!";
+      } else if (error.message?.includes("429") || error.message?.includes("quota") || error.message?.includes("Quota")) {
+        // Parse the retry delay from the API error if available
+        const retryMatch = error.message?.match(/(\d+)s/);
+        const retrySec = retryMatch ? parseInt(retryMatch[1], 10) : 60;
+        const retryMin = Math.ceil(retrySec / 60);
+        errorText =
+          `The assistant is temporarily rate-limited. Please wait about ${
+            retrySec < 60 ? `${retrySec} seconds` : `${retryMin} minute${retryMin > 1 ? 's' : ''}`
+          } and try again. For urgent help, reach Dheyn at Dheyn.main@gmail.com.`;
       }
 
       setMessages(prev => [...prev, {
