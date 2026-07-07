@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, ArrowUp, AlertCircle, Bot, User, RefreshCw } from 'lucide-react';
+import { X, Sparkles, ArrowUp, RefreshCw } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Separated modules for maintainability
 import { SYSTEM_PROMPT } from '../constants/chatSystemPrompt';
 import { SAFETY_SETTINGS } from '../constants/chatSafetySettings';
 import { checkGuardrails } from '../utils/chatGuardrails';
+import MessageBubble from './MessageBubble';
 
 // ============================================================
 // INITIAL WELCOME MESSAGE
@@ -224,39 +225,7 @@ export default function ChatWidget() {
           {/* --- Message List --- */}
           <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-stone-50/50">
             {messages.map((msg) => (
-              <div key={msg.id} className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-
-                {/* Bot avatar */}
-                {msg.sender === 'bot' && (
-                  <div className="w-7 h-7 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 flex-shrink-0 mt-0.5">
-                    <Bot size={13} />
-                  </div>
-                )}
-
-                <div className={`
-                  max-w-[80%] px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm
-                  ${msg.sender === 'user'
-                    ? 'bg-stone-900 text-white rounded-tr-sm'
-                    : msg.isError
-                      ? 'bg-red-50 text-red-700 border border-red-100 rounded-tl-sm'
-                      : msg.isWarning
-                        ? 'bg-amber-50 text-amber-800 border border-amber-100 rounded-tl-sm'
-                        : 'bg-white text-stone-700 border border-stone-100 rounded-tl-sm'
-                  }
-                `}>
-                  {(msg.isError || msg.isWarning) && (
-                    <AlertCircle size={13} className="inline mr-1.5 -mt-0.5 opacity-70" />
-                  )}
-                  {msg.text}
-                </div>
-
-                {/* User avatar */}
-                {msg.sender === 'user' && (
-                  <div className="w-7 h-7 rounded-xl bg-stone-900 flex items-center justify-center text-white flex-shrink-0 mt-0.5">
-                    <User size={13} />
-                  </div>
-                )}
-              </div>
+              <MessageBubble key={msg.id} msg={msg} />
             ))}
 
             {/* Quick-action suggestion pills — shown only on fresh start */}
