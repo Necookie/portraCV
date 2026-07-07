@@ -11,8 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
-.env .local
+# Environment files — NEVER commit secrets
 .env
+.env.local
+.env.development
+.env.development.local
+.env.production
+.env.production.local
+.env.staging
 
 # Editor directories and files
 .vscode/*
