@@ -16,6 +16,15 @@ const INITIAL_MESSAGE = {
   sender: 'bot',
 };
 
+// Quick-action pills shown on first load to guide new users.
+const QUICK_SUGGESTIONS = [
+  "What layouts are available?",
+  "How do I remove a background?",
+  "Why can't I log in?",
+  "Who made PortraCV?",
+  "How do I print my photos?",
+];
+
 // ============================================================
 // CHAT WIDGET COMPONENT
 // ============================================================
@@ -241,6 +250,27 @@ export default function ChatWidget() {
               </div>
             ))}
 
+            {/* Quick-action suggestion pills — shown only on fresh start */}
+            {messages.length === 1 && !isTyping && (
+              <div className="pt-1 flex flex-wrap gap-2">
+                {QUICK_SUGGESTIONS.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => {
+                      setInput(suggestion);
+                      // Small delay so input state updates before submit fires
+                      setTimeout(() => {
+                        document.getElementById('chat-submit-btn')?.click();
+                      }, 50);
+                    }}
+                    className="text-[11px] bg-white border border-stone-200 hover:border-rose-300 hover:bg-rose-50 text-stone-600 hover:text-rose-700 px-3 py-1.5 rounded-full transition-all shadow-sm"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Typing indicator */}
             {isTyping && (
               <div className="flex gap-2.5 justify-start">
@@ -278,6 +308,7 @@ export default function ChatWidget() {
                 className="w-full bg-stone-50 text-stone-800 placeholder:text-stone-400 text-sm rounded-full pl-5 pr-12 py-3.5 focus:outline-none focus:ring-2 focus:ring-rose-200 transition-all border border-stone-100 disabled:opacity-60"
               />
               <button
+                id="chat-submit-btn"
                 type="submit"
                 disabled={!input.trim() || isTyping}
                 className="absolute right-2 p-2 bg-rose-600 hover:bg-rose-700 disabled:bg-stone-200 rounded-full text-white transition-all transform active:scale-95 flex items-center justify-center"
