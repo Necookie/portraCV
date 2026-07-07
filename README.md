@@ -5,27 +5,32 @@ PortraCV is a React + Vite app for ID photo workflows. It helps small photo or p
 ## What It Does
 
 - Upload and crop a portrait before processing
-- Remove backgrounds for ID photos
+- Remove backgrounds for ID photos using BiRefNet AI
 - Apply white, transparent, or custom background colors
 - Stage multiple people on a single print sheet
 - Print preset layouts like `2x2`, `1x1`, and `35x45mm`
 - Gate editing tools behind Supabase auth
-- Show a small in-app assistant powered by Gemini, with OpenAI fallback
+- In-app AI assistant powered by Gemini with enforced topic guardrails
 
 ## Stack
 
 - Frontend: React 19, Vite, Tailwind CSS
 - Auth: Supabase
 - Image editing: `react-easy-crop`, Canvas API
-- AI background removal: FastAPI + BiRefNet in [`backend/`](/C:/Users/dheyn/Documents/02_Dev/portraCV/backend)
+- AI background removal: FastAPI + BiRefNet in [`backend/`](./backend)
+- AI chat assistant: Google Gemini (`gemini-1.5-flash`)
 
 ## Project Structure
 
-- [`src/components/`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/components) UI and feature components
-- [`src/context/AuthContext.jsx`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/context/AuthContext.jsx) auth/session handling
-- [`src/utils/imageProcessor.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/utils/imageProcessor.js) crop + background-removal requests
-- [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js) print layout presets
-- [`backend/main.py`](/C:/Users/dheyn/Documents/02_Dev/portraCV/backend/main.py) Python API for background removal
+- [`src/components/ChatWidget.jsx`](./src/components/ChatWidget.jsx) — AI chat assistant UI
+- [`src/constants/chatSystemPrompt.js`](./src/constants/chatSystemPrompt.js) — Full PortraCV knowledge base injected as Gemini system prompt
+- [`src/constants/chatSafetySettings.js`](./src/constants/chatSafetySettings.js) — Gemini harm category safety configuration
+- [`src/utils/chatGuardrails.js`](./src/utils/chatGuardrails.js) — Client-side jailbreak and off-topic filter
+- [`src/components/`](./src/components) — All UI and feature components
+- [`src/context/AuthContext.jsx`](./src/context/AuthContext.jsx) — Auth/session handling
+- [`src/utils/imageProcessor.js`](./src/utils/imageProcessor.js) — Crop + background-removal requests
+- [`src/constants/packages.js`](./src/constants/packages.js) — Print layout presets
+- [`backend/main.py`](./backend/main.py) — Python API for background removal
 
 ## Run Locally
 
@@ -38,19 +43,25 @@ Open `http://localhost:5173`.
 
 ## Environment Variables
 
-Create a `.env` file in the project root:
+Copy `.env.example` to `.env` and fill in your values:
 
 ```env
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_GEMINI_API_KEY=your_gemini_api_key
-VITE_OPENAI_API_KEY=your_openai_api_key
 ```
 
-Notes:
+> ⚠️ Never commit your `.env` file. It is listed in `.gitignore`.
 
-- `VITE_OPENAI_API_KEY` is optional and is only used as a fallback in the chat widget.
-- The frontend currently points to a hosted background-removal API in [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js).
+## AI Chat Assistant — Guardrails Architecture
+
+The in-app assistant uses a **three-layer defense** to stay on-topic:
+
+| Layer | Where | What it does |
+|-------|-------|-------------|
+| 1. Client-side filter | `chatGuardrails.js` | Catches jailbreak attempts and off-topic keywords before the API call |
+| 2. System prompt | `chatSystemPrompt.js` | Tells Gemini it can only discuss PortraCV; includes product knowledge and deflection scripts |
+| 3. Gemini safety settings | `chatSafetySettings.js` | Blocks harassment, hate speech, explicit content, and dangerous content at the model level |
 
 ## Backend
 
@@ -64,10 +75,11 @@ pip install -r requirements.txt
 python main.py
 ```
 
-If you run your own backend, update `BACKEND_URL` in [`src/constants/packages.js`](/C:/Users/dheyn/Documents/02_Dev/portraCV/src/constants/packages.js).
+If you run your own backend, update `BACKEND_URL` in [`src/constants/packages.js`](./src/constants/packages.js).
 
 ## Current Notes
 
 - Protected pages require a valid Supabase session.
 - Password recovery and account deletion rely on Supabase auth/RPC setup.
 - The app includes an upcoming "AI Formal Attire" feature in the UI, but it is not active yet.
+- The chat assistant deliberately refuses all queries outside of PortraCV topics.
