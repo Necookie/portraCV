@@ -18,7 +18,7 @@ PortraCV is a React + Vite app for ID photo workflows. It helps small photo or p
 - Auth: Supabase
 - Image editing: `react-easy-crop`, Canvas API
 - AI background removal: FastAPI + BiRefNet in [`backend/`](./backend)
-- AI chat assistant: Google Gemini (`gemini-1.5-flash`)
+- AI chat assistant: Google Gemini (`gemini-2.0-flash`)
 
 ## Project Structure
 
