@@ -1,21 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Sparkles, ArrowUp, AlertCircle, Bot, User, RefreshCw } from 'lucide-react';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Separated modules for maintainability
 import { SYSTEM_PROMPT } from '../constants/chatSystemPrompt';
+import { SAFETY_SETTINGS } from '../constants/chatSafetySettings';
 import { checkGuardrails } from '../utils/chatGuardrails';
-
-// ============================================================
-// GEMINI SAFETY SETTINGS
-// Applied at the model level to block harmful AI output.
-// ============================================================
-const SAFETY_SETTINGS = [
-  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-];
 
 // ============================================================
 // INITIAL WELCOME MESSAGE
