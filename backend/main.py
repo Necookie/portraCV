@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from transformers import AutoModelForImageSegmentation
@@ -70,7 +70,24 @@ async def keep_alive():
 
 @app.post("/remove-bg")
 async def remove_bg(file: UploadFile = File(...), color: str = Form(...)):
+    # Validate file type — only accept image/* content types
+    ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+    if file.content_type not in ALLOWED_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type '{file.content_type}'. Only JPEG, PNG, WebP, and GIF images are accepted."
+        )
+
     image_bytes = await file.read()
+
+    # Guard against suspiciously large files (>15MB after reading)
+    MAX_SIZE_BYTES = 15 * 1024 * 1024
+    if len(image_bytes) > MAX_SIZE_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail="File too large. Maximum allowed size is 15MB."
+        )
+
     result_bytes = process_image(image_bytes, color)
     return Response(content=result_bytes, media_type="image/png")
 
