@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useState, useCallback } from 'react';
 import { Upload, Printer, Crop as CropIcon } from 'lucide-react';
