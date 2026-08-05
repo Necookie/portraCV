@@ -173,6 +173,55 @@ export default function ChatWidget() {
     }
   };
 
+  // Handle quick suggestion: set input and immediately send without needing a DOM click
+  const handleSuggestionClick = (suggestion) => {
+    if (isTyping) return;
+    const trimmed = suggestion.trim();
+    // Create a synthetic event-like object to reuse handleSend
+    const syntheticEvent = { preventDefault: () => {} };
+    setInput(trimmed);
+    // Send directly by calling the core logic inline to avoid stale state
+    const userMsg = { id: Date.now(), text: trimmed, sender: 'user' };
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+
+    const guard = checkGuardrails(trimmed);
+    if (guard.blocked) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          text: guard.reply,
+          sender: 'bot',
+          isWarning: true,
+        }]);
+        setIsTyping(false);
+      }, 600);
+      return;
+    }
+
+    (async () => {
+      try {
+        const chat = getOrCreateChatSession();
+        const result = await chat.sendMessage(trimmed);
+        const response = result.response;
+        if (response.promptFeedback?.blockReason) throw new Error("SAFETY_BLOCKED");
+        setMessages(prev => [...prev, { id: Date.now() + 1, text: response.text(), sender: 'bot' }]);
+      } catch (error) {
+        console.error("ChatWidget AI Error:", error);
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          text: "I'm having trouble connecting right now. Please try again in a moment.",
+          sender: 'bot',
+          isError: true,
+        }]);
+        chatSessionRef.current = null;
+      } finally {
+        setIsTyping(false);
+        setInput('');
+      }
+    })();
+  };
+
   // Submit on Enter, allow Shift+Enter for newlines
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -234,13 +283,7 @@ export default function ChatWidget() {
                 {QUICK_SUGGESTIONS.map((suggestion) => (
                   <button
                     key={suggestion}
-                    onClick={() => {
-                      setInput(suggestion);
-                      // Small delay so input state updates before submit fires
-                      setTimeout(() => {
-                        document.getElementById('chat-submit-btn')?.click();
-                      }, 50);
-                    }}
+                    onClick={() => handleSuggestionClick(suggestion)}
                     className="text-[11px] bg-white border border-stone-200 hover:border-rose-300 hover:bg-rose-50 text-stone-600 hover:text-rose-700 px-3 py-1.5 rounded-full transition-all shadow-sm"
                   >
                     {suggestion}
