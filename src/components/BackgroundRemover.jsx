@@ -38,13 +38,15 @@ export default function BackgroundRemover() {
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
+            // Capture whether this is the very first upload BEFORE any state updates
+            // — reading previewUrl from state here is reliable since we haven't called a setter yet.
+            const isFirstUpload = !previewUrl;
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
             setElapsedTime(0);
 
-            // Auto-trigger background removal when dropped in the "Landing View"
-            if (!previewUrl) {
-                // To avoid stale state closures, we pass the file directly to processing
+            // Auto-trigger on first drop only (workspace view handles it via the manual button)
+            if (isFirstUpload) {
                 processAILogic(file, true, "transparent");
             }
         }
