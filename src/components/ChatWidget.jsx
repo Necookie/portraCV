@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, ArrowUp, RefreshCw } from 'lucide-react';
+import { X, Sparkles, ArrowUp, RefreshCw, Bot } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Separated modules for maintainability
