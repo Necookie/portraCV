@@ -1,6 +1,6 @@
 /**
  * Contains configuration and constant data for the PhotoEngine packages.
- * This separates static data from the UI components to improve readabiltiy.
+ * This separates static data from the UI components to improve readability.
  */
 
 // URL for the Hugging Face Space AI Background Removal Service

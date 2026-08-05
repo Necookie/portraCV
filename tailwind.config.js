@@ -29,6 +29,10 @@ export default {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
         },
+        bounceSlow: {
+          '0%, 100%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+          '50%': { transform: 'translateY(-8px)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+        },
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
@@ -36,6 +40,7 @@ export default {
         'fade-in-up-delay-2': 'fadeInUp 0.6s ease-out 0.4s forwards',
         'fade-in-up-delay-3': 'fadeInUp 0.6s ease-out 0.6s forwards',
         'float': 'float 3s ease-in-out infinite',
+        'bounce-slow': 'bounceSlow 2.5s infinite',
       }
     },
   },
