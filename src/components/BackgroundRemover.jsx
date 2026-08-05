@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload, X, Loader2, Download, Image as ImageIcon, Sparkles, Timer, ArrowRight, ShieldCheck } from 'lucide-react';
 import { removeBackgroundAPI } from '../utils/imageProcessor';
 
@@ -18,17 +18,20 @@ export default function BackgroundRemover() {
     const [isTransparent, setIsTransparent] = useState(true);
 
     // --- TIMERS ---
-    let timerInterval = null;
+    const timerRef = useRef(null);
 
     const startTimer = () => {
         setElapsedTime(0);
-        timerInterval = setInterval(() => {
+        timerRef.current = setInterval(() => {
             setElapsedTime(prev => prev + 0.1);
         }, 100);
     };
 
     const stopTimer = () => {
-        if (timerInterval) clearInterval(timerInterval);
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
     };
 
     // --- HANDLERS ---
