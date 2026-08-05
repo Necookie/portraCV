@@ -45,7 +45,7 @@ export default function LandingPage({ onNavigate }) {
                   className="bg-primary hover:bg-rose-700 hover:-translate-y-1 text-white h-12 px-8 rounded-full font-semibold transition-all shadow-md hover:shadow-xl flex items-center justify-center gap-2 group"
                 >
                   Start Layout Engine
-                  <ArrowRight size={18} className="group-hover:transtone-x-1 transition-transform" />
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
 
                 {/* Secondary Action - Contact Developer */}
@@ -60,7 +60,7 @@ export default function LandingPage({ onNavigate }) {
 
             {/* Visual Mockup (Right) */}
             <div className="col-span-6 relative animate-fade-in-up-delay-2">
-              <div className="absolute top-1/2 left-1/2 -transtone-x-1/2 -transtone-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-rose-100/40 to-purple-100/40 rounded-full blur-3xl -z-10"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-rose-100/40 to-purple-100/40 rounded-full blur-3xl -z-10"></div>
 
               <div className="bg-paper rounded-2xl shadow-2xl border border-stone-100 p-6 relative transform lg:rotate-3 hover:rotate-0 transition-all duration-500 max-w-md mx-auto animate-float">
                 <div className="flex justify-between items-center mb-6 border-b border-stone-100 pb-4">
