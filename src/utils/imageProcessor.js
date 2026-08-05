@@ -6,6 +6,52 @@
 import { BACKEND_URL } from '../constants/packages';
 
 /**
+ * Compresses and resizes an image file to a maximum dimension,
+ * preserving aspect ratio. Returns a JPEG-encoded File object.
+ * Shared between BackgroundRemover and any other consumer.
+ *
+ * @param {File} file - The raw image file to compress.
+ * @param {number} [maxDimension=800] - Maximum width/height in pixels.
+ * @returns {Promise<File>} A compressed, resized image File.
+ */
+export async function compressAndResizeImage(file, maxDimension = 800) {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = objectUrl;
+    });
+
+    let outputWidth = image.width;
+    let outputHeight = image.height;
+
+    if (outputWidth > maxDimension || outputHeight > maxDimension) {
+        if (outputWidth > outputHeight) {
+            outputHeight = Math.round((outputHeight * maxDimension) / outputWidth);
+            outputWidth = maxDimension;
+        } else {
+            outputWidth = Math.round((outputWidth * maxDimension) / outputHeight);
+            outputHeight = maxDimension;
+        }
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, outputWidth, outputHeight);
+    URL.revokeObjectURL(objectUrl);
+
+    return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.80);
+    });
+}
+
+/**
  * Helper to asynchronously load an image from a URL or Blob.
  * Used primarily before painting an uploaded file onto a Canvas.
  */

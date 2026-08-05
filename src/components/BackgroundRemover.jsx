@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, Loader2, Download, Image as ImageIcon, Sparkles, Timer, ArrowRight, ShieldCheck } from 'lucide-react';
-import { removeBackgroundAPI } from '../utils/imageProcessor';
+import { removeBackgroundAPI, compressAndResizeImage } from '../utils/imageProcessor';
 
 /**
  * Standalone Background Remover Page
@@ -82,47 +82,6 @@ export default function BackgroundRemover() {
             setIsProcessing(false);
             stopTimer();
         }
-    };
-
-    /**
-     * Reusable image compression logic locally decoupled from Cropper
-     */
-    const compressAndResizeImage = async (file) => {
-        const MAX_DIMENSION = 800;
-        const objectUrl = URL.createObjectURL(file);
-        const image = new Image();
-
-        await new Promise((resolve, reject) => {
-            image.onload = resolve;
-            image.onerror = reject;
-            image.src = objectUrl;
-        });
-
-        let outputWidth = image.width;
-        let outputHeight = image.height;
-
-        if (outputWidth > MAX_DIMENSION || outputHeight > MAX_DIMENSION) {
-            if (outputWidth > outputHeight) {
-                outputHeight = Math.round((outputHeight * MAX_DIMENSION) / outputWidth);
-                outputWidth = MAX_DIMENSION;
-            } else {
-                outputWidth = Math.round((outputWidth * MAX_DIMENSION) / outputHeight);
-                outputHeight = MAX_DIMENSION;
-            }
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = outputWidth;
-        canvas.height = outputHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0, outputWidth, outputHeight);
-
-        return new Promise((resolve) => {
-            canvas.toBlob((blob) => {
-                const newFile = new File([blob], file.name, { type: 'image/jpeg' });
-                resolve(newFile);
-            }, 'image/jpeg', 0.80);
-        });
     };
 
     const handleDownload = () => {
