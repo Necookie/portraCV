@@ -9,8 +9,7 @@ import AuthModal from './components/AuthModal';
 import UpdatePassword from './components/UpdatePassword';
 // 1. Import the new ChatWidget
 import ChatWidget from './components/ChatWidget';
-
-const BACKEND_URL = "https://necookie-portracv-backend.hf.space";
+import { BACKEND_URL } from './constants/packages';
 
 function AppContent() {
   // --- LOCAL STATE ---
