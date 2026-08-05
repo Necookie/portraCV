@@ -157,37 +157,7 @@ export default function PhotoEngine() {
     return (
         <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col">
 
-            {/* INLINE CSS BLOCK defining strict rules exclusively observed during `<window.print()>` */}
-            <style>{`
-                @media print {
-                    @page { size: A4 portrait; margin: 0; }
-                    body { margin: 0; padding: 0; background: white; }
-                    body *, body *::before, body *::after { visibility: hidden; animation: none !important; transform: none !important; transition: none !important; }
-                    /* Only the target canvas grid is allowed to paint onto the paper */
-                    #print-canvas, #print-canvas * { visibility: visible; }
-                    #print-canvas { position: absolute; top: 0; left: 0; right: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 0.25in; margin: 0 auto; }
-                    
-                    /* Dynamic Grid Containers - FORCE ZERO GAP BY DEFAULT */
-                    .print-grid { width: 8in !important; max-width: 8in !important; display: grid; gap: 0 !important; margin-bottom: 0; justify-content: center; margin-left: auto; margin-right: auto; }
-                    .print-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-                    .print-grid-cols-8 { grid-template-columns: repeat(8, 1fr); }
-                    .print-grid-cols-5 { grid-template-columns: repeat(5, 35mm); } /* Passport fix */
-                    
-                    /* Box constraints mapped to physical dimensions */
-                    .photo-box { 
-                        box-sizing: border-box; 
-                        /* Clear border for cutting - dynamically set in subcomponent via var() */
-                        border: var(--print-border-width, 1px) solid var(--print-border-color, #cbd5e1);
-                        background-color: white !important; 
-                        overflow: hidden;
-                        flex-shrink: 0;
-                    }
-                    .size-2x2 { width: 2in !important; height: 2in !important; }
-                    .size-1x1 { width: 1in !important; height: 1in !important; }
-                    .size-passport { width: 35mm !important; height: 45mm !important; } 
-                    img { width: 100%; height: 100%; object-fit: cover; display: block; }
-                }
-            `}</style>
+            {/* Print styles are defined globally in src/index.css */}
 
             <div className="flex-grow pb-20 relative print:static print:pb-0">
 
