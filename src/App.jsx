@@ -69,7 +69,7 @@ function AppContent() {
       <MainLayout
         currentPage={currentPage}
         onNavigate={handleNavigate}
-        onOpenAuth={() => setShowAuthModal(true)}
+        onLogin={() => setShowAuthModal(true)}
       >
         {currentPage === 'landing' && <LandingPage onNavigate={handleNavigate} />}
         {currentPage === 'engine' && (
