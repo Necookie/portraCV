@@ -17,6 +17,11 @@ const INITIAL_MESSAGE = {
   sender: 'bot',
 };
 
+// Generates collision-resistant message IDs (Date.now() alone can repeat
+// when two messages are created within the same millisecond).
+let messageIdCounter = 0;
+const genMessageId = () => `${Date.now()}-${++messageIdCounter}`;
+
 // Quick-action pills shown on first load to guide new users.
 const QUICK_SUGGESTIONS = [
   "How do I make an ID layout?",
@@ -100,7 +105,7 @@ export default function ChatWidget() {
     if (!trimmed || isTyping) return;
 
     // Append user message immediately for a snappy UX
-    const userMsg = { id: Date.now(), text: trimmed, sender: 'user' };
+    const userMsg = { id: genMessageId(), text: trimmed, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
@@ -111,7 +116,7 @@ export default function ChatWidget() {
       // Small delay so the response feels natural, not instant
       setTimeout(() => {
         setMessages(prev => [...prev, {
-          id: Date.now() + 1,
+          id: genMessageId(),
           text: guard.reply,
           sender: 'bot',
           isWarning: true,
@@ -133,7 +138,7 @@ export default function ChatWidget() {
       }
 
       const text = response.text();
-      setMessages(prev => [...prev, { id: Date.now() + 1, text, sender: 'bot' }]);
+      setMessages(prev => [...prev, { id: genMessageId(), text, sender: 'bot' }]);
 
     } catch (error) {
       console.error("ChatWidget AI Error:", error);
@@ -159,7 +164,7 @@ export default function ChatWidget() {
       }
 
       setMessages(prev => [...prev, {
-        id: Date.now() + 1,
+        id: genMessageId(),
         text: errorText,
         sender: 'bot',
         isError: true,
@@ -177,11 +182,9 @@ export default function ChatWidget() {
   const handleSuggestionClick = (suggestion) => {
     if (isTyping) return;
     const trimmed = suggestion.trim();
-    // Create a synthetic event-like object to reuse handleSend
-    const syntheticEvent = { preventDefault: () => {} };
     setInput(trimmed);
     // Send directly by calling the core logic inline to avoid stale state
-    const userMsg = { id: Date.now(), text: trimmed, sender: 'user' };
+    const userMsg = { id: genMessageId(), text: trimmed, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
     setIsTyping(true);
 
@@ -189,7 +192,7 @@ export default function ChatWidget() {
     if (guard.blocked) {
       setTimeout(() => {
         setMessages(prev => [...prev, {
-          id: Date.now() + 1,
+          id: genMessageId(),
           text: guard.reply,
           sender: 'bot',
           isWarning: true,
@@ -205,11 +208,11 @@ export default function ChatWidget() {
         const result = await chat.sendMessage(trimmed);
         const response = result.response;
         if (response.promptFeedback?.blockReason) throw new Error("SAFETY_BLOCKED");
-        setMessages(prev => [...prev, { id: Date.now() + 1, text: response.text(), sender: 'bot' }]);
+        setMessages(prev => [...prev, { id: genMessageId(), text: response.text(), sender: 'bot' }]);
       } catch (error) {
         console.error("ChatWidget AI Error:", error);
         setMessages(prev => [...prev, {
-          id: Date.now() + 1,
+          id: genMessageId(),
           text: "I'm having trouble connecting right now. Please try again in a moment.",
           sender: 'bot',
           isError: true,
