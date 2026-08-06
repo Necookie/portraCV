@@ -20,6 +20,8 @@ import { AlertCircle, Bot, User } from 'lucide-react';
  * @returns {string} Cleaned plain text.
  */
 function cleanMarkdown(text) {
+  if (typeof text !== 'string') return '';
+
   return text
     .replace(/\*\*(.+?)\*\*/g, '$1')      // **bold** → plain
     .replace(/\*(.+?)\*/g, '$1')          // *italic* → plain
