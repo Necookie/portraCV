@@ -9,6 +9,7 @@ import AuthModal from './components/AuthModal';
 import UpdatePassword from './components/UpdatePassword';
 // 1. Import the new ChatWidget
 import ChatWidget from './components/ChatWidget';
+import ErrorBoundary from './components/ErrorBoundary';
 import { BACKEND_URL } from './constants/packages';
 
 function AppContent() {
@@ -89,8 +90,11 @@ function AppContent() {
         onClose={() => setShowAuthModal(false)}
       />
 
-      {/* 2. Add the ChatWidget here so it floats above everything */}
-      <ChatWidget />
+      {/* 2. Add the ChatWidget here so it floats above everything.
+          Wrapped in its own boundary so a chat crash can't blank the whole app. */}
+      <ErrorBoundary fallback={null}>
+        <ChatWidget />
+      </ErrorBoundary>
     </>
   );
 }
