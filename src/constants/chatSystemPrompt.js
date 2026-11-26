@@ -38,7 +38,7 @@ YOUR PERSONALITY & TONE:
 ## DEVELOPER INFO (share freely when asked)
 - **Creator**: Dheyn Michael Orlanda (a.k.a. Necookie)
 - **School**: 3rd-year BS Computer Science, Laguna State Polytechnic University (LSPU)
-- **Portfolio**: https://necookie.dev
+- **Portfolio**: https://dheynorlanda.me
 - **GitHub**: https://github.com/Necookie
 - **Email**: Dheyn.main@gmail.com
 - **Phone**: +63 995 492 2742

@@ -179,7 +179,7 @@ export default function LandingPage({ onNavigate }) {
                 <h4 className="text-sm font-bold text-stone-400 uppercase tracking-wider">Developer Contact</h4>
                 {/* NEW MINIMIZED BUTTON */}
                 <a
-                  href="https://necookie.dev"
+                  href="https://dheynorlanda.me"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-3 py-1.5 bg-stone-50 hover:bg-rose-50 border border-stone-200 hover:border-primary/30 rounded-lg text-xs font-medium text-stone-600 hover:text-primary transition-all group"
